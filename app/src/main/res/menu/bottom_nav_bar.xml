@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Auto Selfie"
+        android:id="@+id/auto_selfie"
+        android:icon="@drawable/ai"
+        />
+
+    <item android:title="Manual Clear"
+        android:id="@+id/manual_clear_button"
+        android:icon="@drawable/pencil_selector"
+        />
+    <item android:title="Crop"
+        android:id="@+id/crop_button"
+        android:icon="@drawable/manual"
+        />
+    <item android:title="Manual Repair"
+        android:id="@+id/manual_repair_button"
+        android:icon="@drawable/pencil_selector"
+        />
+    <item android:title="Zoom"
+        android:id="@+id/zoom_button"
+        android:icon="@drawable/magnifier_selector"
+        />
+
+
+</menu>

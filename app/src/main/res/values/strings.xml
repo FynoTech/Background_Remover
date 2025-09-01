@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">AI-Background-Eraser</string>
+
+    <string name="image_chooser_message">Choose an image to cut</string>
+    <string name="select">Select</string>
+    <string name="Choose_Language">Choose Language</string>
+    <string name="apply">Apply</string>
+    <string name="remove_background">Remove Background</string>
+    <string name="change_background">Change Background</string>
+    <string name="remove_object">Remove Object</string>
+    <string name="instantly_erase_distractions_and_highlight_your_subject">Instantly erase distractions and highlight your subject.</string>
+    <string name="give_your_subject_a_fresh_new_look_in_seconds">Give your subject a fresh new look in seconds.</string>
+    <string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Erase unwanted elements and keep the focus on your subject.</string>
+    <string name="languages">Languages</string>
+    <string name="open">Open</string>
+    <string name="share">Share</string>
+    <string name="background">Background Eraser</string>
+    <string name="make_every_photo_perfect">Make every photo perfect</string>
+    <string name="animation">Animation</string>
+    <string name="version">Version</string>
+    <string name="unable_to_share">Unable to share</string>
+    <string name="settings">Settings</string>
+    <string name="how_to_use">How to Use</string>
+    <string name="rate">Rate App</string>
+    <string name="share_app">Share App</string>
+    <string name="privacy">Privacy Policy</string>
+    <string name="editor">Editor</string>
+</resources>
