@@ -68,11 +68,15 @@ class SettingsActivity : BaseActivity() {
             }
         }
 
-
+        binding.howtouse.setSafeClickListener(this){
+            val intent = Intent(this, OnboardingActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
+        }
 
         binding.rateus.setSafeClickListener(this) {
 
-
+            Dialogs.showRateUsDialog(this)
         }
     }
 

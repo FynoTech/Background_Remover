@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/union"
+        android:layout_marginTop="55dp"
+        android:paddingTop="@dimen/_20sdp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content">
+        <!-- Message -->
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="@string/we_are_working_hard_for_a_better_user_experience_we_d_great_appreciate_if_you_can_rate_us"
+            android:gravity="center"
+
+            android:fontFamily="@font/montserratmedium"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+
+        <!-- Rating Bar -->
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="?android:attr/ratingBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:numStars="5"
+            android:progress="4"
+            android:stepSize="1"
+            android:indeterminateTint="@color/white"
+            android:progressTint="@color/white"
+            android:secondaryProgressTint="@color/white"
+             />
+
+        <!-- Rate Button -->
+        <TextView
+            android:id="@+id/btnRate"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bgbutton2"
+            android:text="@string/rate1"
+            android:gravity="center"
+            android:fontFamily="@font/montserratsemibold"
+            android:textAllCaps="false"
+            android:textColor="@color/red"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <!-- Emoji Icon -->
+    <ImageView
+        android:id="@+id/imgEmoji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="center"
+        android:src="@drawable/emoji1"
+        android:contentDescription="@string/app_name" />
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

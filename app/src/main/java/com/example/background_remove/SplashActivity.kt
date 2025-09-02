@@ -3,6 +3,8 @@ package com.example.background_remove
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +13,7 @@ import com.example.background_remove.databinding.ActivitySplashBinding
 
 import com.example.background_remove.utils.GDPRConsentMessage
 import com.example.background_remove.utils.Preferences
+import com.example.background_remove.utils.setGradientColor
 
 
 import com.example.background_remove.utils.setupStatusBar
@@ -29,6 +32,7 @@ class SplashActivity : BaseActivity() {
         setupStatusBar(window, Color.BLACK)
         setContentView(binding.root)
 
+        binding.text.setGradientColor()
         googleMobileAdsConsentManager = GDPRConsentMessage.getInstance(applicationContext)
 
         googleMobileAdsConsentManager.gatherConsent(this@SplashActivity) { _ ->

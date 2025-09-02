@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/langselect"
+    android:background="@drawable/bg_dialog_round"
     android:orientation="vertical"
     android:paddingTop="12dp"
     android:paddingHorizontal="12dp"
@@ -13,38 +13,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:orientation="vertical">
-
-        <!-- File info row -->
-
-
-       <!-- <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/animationView"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            app:lottie_rawRes="@raw/loading"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"/>-->
-
-
-
-
-
 
         <TextView
             android:id="@+id/tvSuccess"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please Wait"
+            android:text="@string/auto_remove_is_processing"
             android:textSize="15sp"
-
             android:gravity="center"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="15dp"
             android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/montserratsemibold"
+            android:fontFamily="@font/montserratmedium"
             android:layout_marginTop="12dp"
             android:textColor="@android:color/black" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationView"
+            app:layout_constraintTop_toBottomOf="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            app:lottie_rawRes="@raw/splashanimation"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
 
 
 

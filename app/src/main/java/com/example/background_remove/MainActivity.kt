@@ -23,6 +23,7 @@ import com.canhub.cropper.CropImageView
 
 import com.example.autobackgroundremover.OnBackgroundChangeListener
 import com.example.background_remove.databinding.ActivityMainBinding
+import com.example.background_remove.utils.Dialogs
 import com.example.background_remove.utils.setSafeClickListenertools
 import com.example.background_remove.utils.setupStatusBar
 import java.io.File
@@ -184,7 +185,17 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-
+        Dialogs.showQuitDialog(
+            context = this,
+            title = getString(R.string.quit),
+            onConfirm = {
+                System.exit(0)
+                finishAffinity()
+            },
+            onCancel = {
+                Toast.makeText(this, getString(R.string.cancelled), Toast.LENGTH_SHORT).show()
+            }
+        )
 
     }
 

@@ -6,8 +6,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
@@ -21,6 +25,8 @@ import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.graphics.drawable.toBitmap
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -80,7 +86,84 @@ fun Context.backgroundCrop(drawableID: Drawable, reqWidth: Int, reqHeight: Int):
 
 
 var lastGlobalClickTime = 0L // Global variable to track last click time for all buttons
+fun TextView.setGradientColor() {
+    val paint = this.paint
+    val width = paint.measureText(this.text.toString())
+    val textShader: Shader = LinearGradient(
+        0f, 0f, width, this.textSize,
+        intArrayOf(
+            Color.parseColor("#FFFF512F"),   // start color
+            Color.parseColor("#FFDD2476")// end color
+        ),
+        null,
+        Shader.TileMode.CLAMP
+    )
+    this.paint.shader = textShader
+    this.invalidate() // refresh the TextView
+}
+fun TextView.ResetGradientColor() {
+    val paint = this.paint
+    val width = paint.measureText(this.text.toString())
+    val textShader: Shader = LinearGradient(
+        0f, 0f, width, this.textSize,
+        intArrayOf(
+            Color.parseColor("#595656"),   // start color
+            Color.parseColor("#595656")// end color
+        ),
+        null,
+        Shader.TileMode.CLAMP
+    )
+    this.paint.shader = textShader
+    this.invalidate() // refresh the TextView
+}
+fun ImageView.setGradientDrawableColors() {
+    val width = drawable.intrinsicWidth
+    val height = drawable.intrinsicHeight
 
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+
+    // Draw gradient
+    val paint = Paint()
+    paint.shader = LinearGradient(
+        0f, 0f, width.toFloat(), height.toFloat(),
+        Color.parseColor("#FFFF512F"), Color.parseColor("#FFDD2476"),
+        Shader.TileMode.CLAMP
+    )
+    canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+
+    // Draw original drawable as mask
+    drawable.mutate().let { original ->
+        original.setBounds(0, 0, width, height)
+        original.draw(canvas)
+    }
+
+    this.setImageDrawable(BitmapDrawable(resources, bitmap))
+}
+fun ImageView.ResetGradientDrawableColors() {
+    val width = drawable.intrinsicWidth
+    val height = drawable.intrinsicHeight
+
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+
+    // Draw gradient
+    val paint = Paint()
+    paint.shader = LinearGradient(
+        0f, 0f, width.toFloat(), height.toFloat(),
+        Color.parseColor("#595656"), Color.parseColor("#595656"),
+        Shader.TileMode.CLAMP
+    )
+    canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+
+    // Draw original drawable as mask
+    drawable.mutate().let { original ->
+        original.setBounds(0, 0, width, height)
+        original.draw(canvas)
+    }
+
+    this.setImageDrawable(BitmapDrawable(resources, bitmap))
+}
 fun View.setSafeClickListener(activity: Context,interval: Long = 500, onSafeClick: (View) -> Unit) {
     this.setOnClickListener { view ->
         val currentTime = System.currentTimeMillis()

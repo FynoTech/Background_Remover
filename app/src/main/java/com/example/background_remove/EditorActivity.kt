@@ -1,5 +1,6 @@
 package com.example.background_remove
 
+import ColorAdapter
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,18 +8,35 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
 
 import com.example.autobackgroundremover.OnBackgroundChangeListener
+
 import com.example.background_remove.databinding.ActivityEditorBinding
-import com.example.background_remove.databinding.ActivityMainBinding
+import com.example.background_remove.utils.Dialogs
+import com.example.background_remove.utils.Dialogs.colors
+import com.example.background_remove.utils.Dialogs.showQuitDialog
+import com.example.background_remove.utils.Preferences
+import com.example.background_remove.utils.ProgressUtils
+
+import com.example.background_remove.utils.ResetGradientColor
+import com.example.background_remove.utils.ResetGradientDrawableColors
+
+import com.example.background_remove.utils.setGradientColor
+import com.example.background_remove.utils.setGradientDrawableColors
+import com.example.background_remove.utils.setSafeClickListener
 import com.example.background_remove.utils.setSafeClickListenertools
 import com.example.background_remove.utils.setupStatusBar
 
@@ -41,7 +59,7 @@ class EditorActivity : BaseActivity() {
         }
 
     }
-
+    private var selectedLayout: LinearLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditorBinding.inflate(layoutInflater)
@@ -53,15 +71,74 @@ class EditorActivity : BaseActivity() {
         setDrawViewBitmap(Uri.parse(intent.getStringExtra("IMAGE_URI").toString()))
         setupStrokeBar()
         setupUndoRedo()
-        setupBottomNavigation()
 
 
 
 
         binding.done.setSafeClickListenertools {
-            binding.done.setImageBitmap(binding.drawView.getBitmap())
+            ProgressUtils.bitmap=binding.drawView.getBitmap()
+            val intent = Intent(this, PreviewActivity::class.java)
+            startActivity(intent)
+
+
         }
 
+
+        val adapter = ColorAdapter(colors) { clickedColor ->
+            if(clickedColor==null){
+                binding.drawView.background=ContextCompat.getDrawable(this,R.drawable.pngpg)
+                binding.drawView.setColor(Color.TRANSPARENT)
+            }else{
+                binding.drawView.setColor(clickedColor)
+            }
+
+        }
+        val recyclerView = findViewById<RecyclerView>(R.id.colorRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.adapter = adapter
+        // Auto Removal click
+        binding.layoutAutoRemoval.setSafeClickListenertools {
+            autoSelfie()
+            binding.manualClearSettingsLayout.visibility = android.view.View.GONE
+            binding.colorlayout.visibility = android.view.View.VISIBLE
+            selectItem(binding.layoutAutoRemoval)
+        }
+
+        // Manual click
+        binding.layoutManual.setSafeClickListenertools {
+            binding.drawView.setAction(DrawView.DrawViewAction.MANUAL_CLEAR)
+            binding.manualClearSettingsLayout.visibility = android.view.View.VISIBLE
+            binding.colorlayout.visibility = android.view.View.GONE
+            selectItem(binding.layoutManual)
+        }
+
+        // Crop click
+        binding.layoutCrop.setSafeClickListenertools {
+            imageUri?.let { uri -> startCrop(uri) }
+            binding.manualClearSettingsLayout.visibility = android.view.View.GONE
+            binding.colorlayout.visibility = android.view.View.GONE
+            selectItem(binding.layoutCrop)
+        }
+
+        // Repair click
+        binding.layoutRepair.setSafeClickListenertools {
+            binding.drawView.setAction(DrawView.DrawViewAction.MANUAL_REPAIR)
+            binding.manualClearSettingsLayout.visibility = android.view.View.VISIBLE
+            binding.colorlayout.visibility = android.view.View.GONE
+            selectItem(binding.layoutRepair)
+        }
+
+        // Zoom click
+        binding.layoutZoom.setSafeClickListenertools {
+            binding.drawView.setAction(DrawView.DrawViewAction.ZOOM)
+            binding.manualClearSettingsLayout.visibility = android.view.View.GONE
+            binding.colorlayout.visibility = android.view.View.GONE
+            selectItem(binding.layoutZoom)
+        }
+
+
+        selectItem(binding.layoutManual)
+        binding.colorlayout.visibility = android.view.View.GONE
 
     }
 
@@ -78,9 +155,10 @@ class EditorActivity : BaseActivity() {
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
                 binding.drawView.setStrokeWidth(seekBar!!.progress)
+
             }
         })
-        binding.drawView.setLoadingModal(binding.loadingView)
+
     }
 
     private fun setupUndoRedo() {
@@ -93,37 +171,67 @@ class EditorActivity : BaseActivity() {
         binding.drawView.setButtons(binding.undo, binding.redo)
     }
 
-    private fun setupBottomNavigation() {
-        binding.bottomNavView.selectedItemId = R.id.manual_clear_button
-        binding.bottomNavView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.auto_selfie -> {
-                    autoSelfie()
-                    true
+
+    private fun selectItem(layout: LinearLayout) {
+        // Reset previous selection
+        selectedLayout?.let { prev ->
+            when (prev.id) {
+                R.id.layoutAutoRemoval ->
+                {
+                    binding.autoRemoval.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.autor_icon_unselect))
+                    binding.textAutoRemoval.ResetGradientColor()
                 }
-                R.id.manual_clear_button -> {
-                    binding.drawView.setAction(DrawView.DrawViewAction.MANUAL_CLEAR)
-                    binding.manualClearSettingsLayout.visibility = android.view.View.VISIBLE
-                    true
+                R.id.layoutManual -> {
+                    binding.manual.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.erase_icon))
+                    binding.textManual.ResetGradientColor()
                 }
-                R.id.manual_repair_button -> {
-                    binding.drawView.setAction(DrawView.DrawViewAction.MANUAL_REPAIR)
-                    binding.manualClearSettingsLayout.visibility = android.view.View.VISIBLE
-                    true
+                R.id.layoutCrop -> {
+                    binding.crop.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.crop_icon))
+                    binding.textCrop.ResetGradientColor()
                 }
-                R.id.crop_button -> {
-                    imageUri?.let { uri -> startCrop(uri) }
-                    true
+                R.id.layoutRepair -> {
+                    binding.repair.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.repair_icon))
+                    binding.textRepair.ResetGradientColor()
                 }
-                R.id.zoom_button -> {
-                    binding.drawView.setAction(DrawView.DrawViewAction.ZOOM)
-                    binding.manualClearSettingsLayout.visibility = android.view.View.INVISIBLE
-                    true
+                R.id.layoutZoom -> {
+                    binding.zoom.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.zoom_icon))
+                    binding.textZoom.ResetGradientColor()
                 }
-                else -> false
             }
         }
+
+
+        selectedLayout = layout
+        selectedLayout?.let { prev ->
+            when (prev.id) {
+                R.id.layoutAutoRemoval ->
+                {
+                    binding.autoRemoval.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.auto_icon))
+                    binding.textAutoRemoval.setGradientColor()
+                }
+                R.id.layoutManual -> {
+                    binding.manual.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.manual_icon_select))
+                    binding.textManual.setGradientColor()
+                }
+                R.id.layoutCrop -> {
+                    binding.crop.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.crop_icon_select))
+                    binding.textCrop.setGradientColor()
+                }
+                R.id.layoutRepair -> {
+                    binding.repair.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.repair_icon_select))
+                    binding.textRepair.setGradientColor()
+                }
+                R.id.layoutZoom -> {
+                    binding.zoom.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.zoom_icon_select))
+                    binding.textZoom.setGradientColor()
+                }
+            }
+        }
+
+
     }
+
+
     private fun startCrop(uri: Uri) {
         cropImage.launch(
             CropImageContractOptions(uri,
@@ -134,6 +242,7 @@ class EditorActivity : BaseActivity() {
         )
     }
     private fun autoSelfie() {
+        ProgressUtils.show(this)
         binding.drawView.beforeAutoSelfie()
         BackgroundRemover.process(
             binding.drawView.getBitmap()!!,
@@ -141,16 +250,30 @@ class EditorActivity : BaseActivity() {
             object : OnBackgroundChangeListener {
                 override fun onSuccess(bitmap: Bitmap) {
                     binding.drawView.afterAutoSelfie(bitmap)
+                    ProgressUtils.dismiss()
                 }
 
                 override fun onFailed(exception: Exception) {
-                    Toast.makeText(this@EditorActivity, "Error Occurred", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EditorActivity,
+                        getString(R.string.error_occurred), Toast.LENGTH_SHORT).show()
+                    ProgressUtils.dismiss()
+
                 }
             })
     }
 
     override fun onBackPressed() {
-       finish()
+        showQuitDialog(
+            context = this,
+            title = getString(R.string.quit),
+            onConfirm = {
+                finish() // close the activity
+            },
+            onCancel = {
+                Toast.makeText(this, getString(R.string.cancelled), Toast.LENGTH_SHORT).show()
+            }
+        )
+
 
     }
 

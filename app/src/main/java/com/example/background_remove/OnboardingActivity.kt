@@ -81,21 +81,24 @@ class OnboardingActivity : BaseActivity() {
         val adapter = OnboardingAdapter(this, pages)
         binding.viewPager.adapter = adapter
     }
- /*   private fun loadnativead(){
-        NativeAdManager.loadAndShowNativeAd(
-            activity = this,
-            adUnitId = RemoteConfigManager.getOnBoardingNativeAdId(),
-            container = binding.cvAdContainerNative,
-            style = NativeAdManager.NativeStyle.ADVANCE,binding.loadingLayoutNative
-        ) { loaded, failed, fromCache ->
-            Log.d("Ads", "Native Ad loaded=$loaded failed=$failed fromCache=$fromCache")
-            if(failed){
-                binding.cvAdContainerNative.visibility= View.GONE
-            }
-        }
+    /*   private fun loadnativead(){
+           NativeAdManager.loadAndShowNativeAd(
+               activity = this,
+               adUnitId = RemoteConfigManager.getOnBoardingNativeAdId(),
+               container = binding.cvAdContainerNative,
+               style = NativeAdManager.NativeStyle.ADVANCE,binding.loadingLayoutNative
+           ) { loaded, failed, fromCache ->
+               Log.d("Ads", "Native Ad loaded=$loaded failed=$failed fromCache=$fromCache")
+               if(failed){
+                   binding.cvAdContainerNative.visibility= View.GONE
+               }
+           }
 
 
-    }*/
+       }*/
+    override fun onBackPressed() {
+
+    }
     override fun onPause() {
         super.onPause()
       //  Ads.setPaused(true,this)

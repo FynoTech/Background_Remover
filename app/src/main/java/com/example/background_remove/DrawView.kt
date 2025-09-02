@@ -53,6 +53,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     private var currentPaint: Paint = erasePaint
+    private var background: Int = Color.TRANSPARENT
 
     // Working and original bitmaps
     private var savedImageBitmap: Bitmap? = null         // original (immutable copy)
@@ -79,7 +80,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private var undoButton: ImageView? = null
     private var redoButton: ImageView? = null
-    private var loadingModal: View? = null
+
 
     enum class DrawViewAction {
         AUTO_SELFIE, MANUAL_CLEAR, MANUAL_REPAIR, ZOOM,CROP
@@ -92,13 +93,11 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         undoButton = undoBtn
         redoButton = redoBtn
         resetZoom()
-        loadingModal?.visibility= GONE
+
         updateButtons()
     }
 
-    fun setLoadingModal(loading: View?) {
-        loadingModal = loading
-    }
+
 
     fun setStrokeWidth(px: Int) {
         erasePaint.strokeWidth = px.toFloat()
@@ -116,11 +115,37 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
     fun getBitmap(): Bitmap? {
-        // returns full-resolution original (not scaled) if you need it elsewhere,
-        // but in this simplified view we keep/descale to view size; return workingBitmap
-        return workingBitmap
-    }
+        workingBitmap ?: return null
 
+        // Create final output the same size as the View (not just working bitmap)
+        val finalBitmap = Bitmap.createBitmap(
+            width,
+            height,
+            Bitmap.Config.ARGB_8888
+        )
+
+        val canvas = Canvas(finalBitmap)
+
+        // Background color
+        canvas.drawColor(background)
+
+        // Apply current transformations (pan + zoom)
+        canvas.save()
+        canvas.translate(posX, posY)
+        canvas.scale(scaleFactor, scaleFactor, focusX, focusY)
+
+        // Draw the working bitmap
+        workingBitmap?.let {
+            canvas.drawBitmap(it, 0f, 0f, null)
+        }
+
+
+
+
+        canvas.restore()
+
+        return finalBitmap
+    }
     // --- Bitmap setup/resizing ---
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -199,7 +224,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         setLayerType(LAYER_TYPE_SOFTWARE, null) // Needed for transparency
-        setBackgroundColor(Color.TRANSPARENT)   // View itself transparent
+        setBackgroundColor(background)   // View itself transparent
         canvas.save()
         canvas.translate(posX, posY)
         canvas.scale(scaleFactor, scaleFactor, focusX, focusY)
@@ -309,7 +334,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     fun beforeAutoSelfie() {
         // Save current state for undo before applying ML segmentation
         pushHistorySnapshot()
-        loadingModal?.visibility = VISIBLE
+
     }
     fun resetZoom() {
         scaleFactor = 1f
@@ -322,7 +347,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         workingBitmap = segmented.copy(Bitmap.Config.ARGB_8888, true)
         bufferCanvas = Canvas(workingBitmap!!)
 
-        loadingModal?.visibility = INVISIBLE
+
         updateButtons()
         invalidate()
     }
@@ -379,6 +404,12 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                 // other actions not applied here
             }
         }
+    }
+
+    fun setColor(transparent: Int) {
+        background=transparent
+        invalidate()
+
     }
 
 

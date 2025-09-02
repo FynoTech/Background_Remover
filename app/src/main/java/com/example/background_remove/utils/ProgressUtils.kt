@@ -2,6 +2,7 @@ package com.example.background_remove.utils
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -11,17 +12,16 @@ import com.example.background_remove.R
 
 
 object ProgressUtils {
-
+    var bitmap: Bitmap? = null
     private var dialog: Dialog? = null
-/*
-    fun show(context: Context, message: String) {
+    fun show(context: Context) {
         if (dialog != null && dialog?.isShowing == true) return
 
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_progress, null)
 
         // Update message
         val tvMessage = view.findViewById<TextView>(R.id.tvSuccess)
-        tvMessage.text = message
+
 
         // Lottie animation
         val animationView = view.findViewById<LottieAnimationView>(R.id.animationView)
@@ -37,7 +37,7 @@ object ProgressUtils {
         val width = (context.resources.displayMetrics.widthPixels * 0.75).toInt()
         dialog!!.window?.setLayout(width, android.view.ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog?.show()
-    }*/
+    }
 
     fun dismiss() {
         dialog?.let {

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/bg_dialog_round">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/quit"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="@android:color/black"
+        android:fontFamily="@font/montserratsemibold"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Input -->
+    <TextView
+        android:id="@+id/etFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/are_you_sure_you_want_to_exit_n_the_app"
+        android:textColor="@color/grey1"
+        android:gravity="center"
+        android:fontFamily="@font/montserratregular"
+        android:padding="8dp"
+        android:textSize="13sp" />
+
+
+    <!-- Buttons Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserratsemibold"
+            android:layout_marginEnd="8dp"
+            android:textSize="17sp"
+            android:text="@string/cancel"
+            android:textColor="@android:color/white"
+            android:background="@drawable/buttonbg"
+            android:textAllCaps="false"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnOk"
+            android:layout_width="0dp"
+            android:fontFamily="@font/montserratsemibold"
+            android:layout_height="48dp"
+            android:textSize="17sp"
+            android:layout_weight="1"
+            android:text="@string/quit1"
+            android:textColor="@color/grey"
+            android:background="@drawable/buttonbg1"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+</LinearLayout>
