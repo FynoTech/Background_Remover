@@ -130,7 +130,38 @@
 
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="visible"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:id="@+id/howtouse"
+                android:background="@drawable/settingsbg"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="12dp">
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/howtouse"
+                    />
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+
+                    android:fontFamily="@font/montserratsemibold"
+                    android:text="@string/howto"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -262,38 +293,7 @@
 
 
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:visibility="visible"
-                android:layout_marginHorizontal="@dimen/_15sdp"
-                android:id="@+id/howtouse"
-                android:background="@drawable/settingsbg"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="12dp">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/howtouse"
-                    />
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-
-                    android:fontFamily="@font/montserratsemibold"
-                    android:text="@string/howto"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp" />
-
-
-            </LinearLayout>
             <!-- Footer -->
             <TextView
                 android:id="@+id/textverison"

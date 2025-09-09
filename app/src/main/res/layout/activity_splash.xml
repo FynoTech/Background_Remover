@@ -37,19 +37,19 @@
         android:fontFamily="@font/montserratsemibold"
         android:layout_height="wrap_content"
        android:text="@string/background"/>
-
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/adlayout"
         android:layout_marginBottom="25dp"
-        android:textSize="14sp"
-        android:id="@+id/text1"
-        android:textColor="@color/black"
-        android:fontFamily="@font/montserratmedium"
+        android:textSize="11sp"
+
+        android:textColor="@color/grey1"
+        android:fontFamily="@font/montserratregular"
         android:layout_height="wrap_content"
-        android:text="@string/make_every_photo_perfect"/>
+        android:text="@string/this_app_contains_ads"/>
+
      <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/animationView"
                     app:layout_constraintTop_toBottomOf="@+id/text"

@@ -117,10 +117,15 @@ class EditorActivity : BaseActivity() {
         // Auto Removal click
         binding.layoutAutoRemoval.setSafeClickListener(this,check = RemoteConfigManager.isRewardedAutoAdEnabled(), type = "rewarded") {
             if (!RemoteConfigManager.isRewardedAutoAdEnabled()) {
-                autoSelfie()
-                binding.manualClearSettingsLayout.visibility = android.view.View.GONE
-                binding.colorlayout.visibility = android.view.View.VISIBLE
-                selectItem(binding.layoutAutoRemoval)
+                if (!autocheck) {
+                    autoSelfie()
+                    binding.manualClearSettingsLayout.visibility = android.view.View.GONE
+                    binding.colorlayout.visibility = android.view.View.VISIBLE
+                    selectItem(binding.layoutAutoRemoval)
+                } else {
+
+                    Toast.makeText(this, getString(R.string.already_removed), Toast.LENGTH_SHORT).show()
+                }
             } else {
                 ProgressUtils.show(this,getString(R.string.loading_ad_))
                 Ads.loadAndShowRewarded(
@@ -134,20 +139,28 @@ class EditorActivity : BaseActivity() {
                         }
                         failed -> {
                             ProgressUtils.dismiss()
-                            autoSelfie()
-                            binding.manualClearSettingsLayout.visibility = android.view.View.GONE
-                            binding.colorlayout.visibility = android.view.View.VISIBLE
-                            selectItem(binding.layoutAutoRemoval)
+                            if (!autocheck) {
+                                autoSelfie()
+                                binding.manualClearSettingsLayout.visibility = android.view.View.GONE
+                                binding.colorlayout.visibility = android.view.View.VISIBLE
+                                selectItem(binding.layoutAutoRemoval)
+                            } else {
+                                Toast.makeText(this, getString(R.string.already_removed), Toast.LENGTH_SHORT).show()
+                            }
                         }
                         showed -> {
 
 
                         }
                         dismissed -> {
-                            autoSelfie()
-                            binding.manualClearSettingsLayout.visibility = android.view.View.GONE
-                            binding.colorlayout.visibility = android.view.View.VISIBLE
-                            selectItem(binding.layoutAutoRemoval)
+                            if (!autocheck) {
+                                autoSelfie()
+                                binding.manualClearSettingsLayout.visibility = android.view.View.GONE
+                                binding.colorlayout.visibility = android.view.View.VISIBLE
+                                selectItem(binding.layoutAutoRemoval)
+                            } else {
+                                Toast.makeText(this, getString(R.string.already_removed), Toast.LENGTH_SHORT).show()
+                            }
                         }
                         rewarded -> {
 
@@ -326,7 +339,10 @@ class EditorActivity : BaseActivity() {
             )
         )
     }
+    var autocheck=false
+    var remvoedbitmap:Bitmap?=null
     private fun autoSelfie() {
+        binding.drawView.setAction(DrawView.DrawViewAction.AUTO_SELFIE)
         ProgressUtils.show(this, getString(R.string.auto_remove_is_processing))
         binding.drawView.beforeAutoSelfie()
         BackgroundRemover.process(
@@ -334,7 +350,9 @@ class EditorActivity : BaseActivity() {
             true,
             object : OnBackgroundChangeListener {
                 override fun onSuccess(bitmap: Bitmap) {
+                    remvoedbitmap=bitmap
                     binding.drawView.afterAutoSelfie(bitmap)
+                    autocheck=true
                     ProgressUtils.dismiss()
                 }
 

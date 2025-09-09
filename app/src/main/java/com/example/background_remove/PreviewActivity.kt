@@ -65,6 +65,7 @@ class PreviewActivity : BaseActivity() {
 
         binding.imagewithwatermark.setSafeClickListener(this) {
             withWatermark = true
+            binding.btnSave.text = getString(R.string.save_now)
             binding.imagewithwatermark.background =
                 resources.getDrawable(R.drawable.selected_border)
             binding.imagewithoutwatermark.background =
@@ -74,6 +75,7 @@ class PreviewActivity : BaseActivity() {
         }
         binding.imagewithoutwatermark.setSafeClickListener(this) {
             withWatermark = false
+            binding.btnSave.text = getString(R.string.watchad)
             binding.imagewithoutwatermark.background =
                 resources.getDrawable(R.drawable.selected_border)
             binding.imagewithwatermark.background =

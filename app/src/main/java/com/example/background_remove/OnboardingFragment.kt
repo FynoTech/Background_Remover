@@ -61,7 +61,7 @@ class OnboardingFragment : Fragment() {
             tvTitle.text = arguments?.getString(ARG_TITLE)
             tvDesc.text = arguments?.getString(ARG_DESC)
             ivImage.setImageResource(arguments?.getInt(ARG_IMAGE) ?: 0)
-            ivindicator.setImageResource(arguments?.getInt(ARG_INDI) ?: 0)
+           /* ivindicator.setImageResource(arguments?.getInt(ARG_INDI) ?: 0)
             btnNext.setSafeClickListenertools{
                 val viewPager = activity?.findViewById<ViewPager2>(
                     R.id.viewPager
@@ -87,7 +87,7 @@ class OnboardingFragment : Fragment() {
                                     }
                                     dismissed  -> {  goToPermissionScreen()
                                     }
-                                    loaded     -> { /* optional: ad ready */ }
+                                    loaded     -> { *//* optional: ad ready *//* }
                                     showed     ->
                                     {
 
@@ -101,7 +101,7 @@ class OnboardingFragment : Fragment() {
                     }
                 }
 
-            }
+            }*/
         }
     }
     private fun goToPermissionScreen() {

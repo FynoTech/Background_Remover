@@ -10,10 +10,45 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/adlayout"
+        app:layout_constraintBottom_toTopOf="@id/layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+    <!-- Converted inner layout to LinearLayout -->
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/adlayout"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp">
 
+
+
+
+        <ImageView
+            android:id="@+id/ivindicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:src="@drawable/firstindi"
+            android:scaleType="fitCenter" />
+
+
+
+
+        <ImageView
+            android:id="@+id/btnNext"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/onboardingnext"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/adlayout"
         android:layout_width="match_parent"

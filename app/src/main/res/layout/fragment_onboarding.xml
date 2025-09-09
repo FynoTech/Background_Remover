@@ -42,26 +42,7 @@
         android:fontFamily="@font/montserratregular"
         android:gravity="center"
         android:layout_marginBottom="24dp" />
-    <ImageView
-        android:id="@+id/ivindicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/firstindi"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:scaleType="fitCenter" />
 
-
-
-
-        <ImageView
-            android:id="@+id/btnNext"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:src="@drawable/onboardingnext"
-            android:backgroundTint="@android:color/holo_red_dark"
-            android:textColor="@android:color/white" />
 
 
 </LinearLayout>

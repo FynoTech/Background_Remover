@@ -136,7 +136,7 @@
     <LinearLayout
         android:id="@+id/imagewithwatermark"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="73dp"
         android:orientation="vertical"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginBottom="16dp"
@@ -173,7 +173,7 @@
     <LinearLayout
         android:id="@+id/imagewithoutwatermark"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="73dp"
         android:orientation="vertical"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginBottom="15dp"

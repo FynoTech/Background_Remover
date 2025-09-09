@@ -1,16 +1,22 @@
 package com.example.background_remove
 
+import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import com.example.background_remove.adapters.OnboardingAdapter
 import com.example.background_remove.adsManager.AdBanner
 import com.example.background_remove.adsManager.Ads
 import com.example.background_remove.adsManager.NativeAdManager
 import com.example.background_remove.utils.OnboardingPage
+import com.example.background_remove.utils.ProgressUtils
 import com.example.background_remove.utils.RemoteConfigManager
+import com.example.background_remove.utils.setSafeClickListenertools
 import com.example.background_remove.utils.setupStatusBar
 import com.photo.editor.background.eraser.bgeraser.R
 import com.photo.editor.background.eraser.bgeraser.databinding.ActivityOnboardingBinding
@@ -91,6 +97,38 @@ class OnboardingActivity : BaseActivity() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 val page = pages[position]
+                if (pages.size==5) {
+                    when(position){
+                        0->{
+                            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(this@OnboardingActivity,R.drawable.indi1))
+                        }
+                        1->{
+                            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(this@OnboardingActivity,R.drawable.indi2))
+                        }
+                        2->{
+                            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(this@OnboardingActivity,R.drawable.indi3))
+                        }
+                        3->{
+                            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(this@OnboardingActivity,R.drawable.indi4))
+                        }
+                        4->{
+                            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(this@OnboardingActivity,R.drawable.indi5))
+                        }
+                    }
+                } else {
+                    when(position){
+                        0->{
+                            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(this@OnboardingActivity,R.drawable.firstindi))
+                        }
+                        1->{
+                            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(this@OnboardingActivity,R.drawable.secondindi))
+                        }
+                        2->{
+                            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(this@OnboardingActivity,R.drawable.thirdindi))
+                        }
+
+                    }
+                }
                 if (page is OnboardingPage.NativeAdPage) {
                     binding.cvAdContainernative.visibility = View.INVISIBLE
                     binding.cvAdContainerbanner.visibility = View.INVISIBLE
@@ -108,10 +146,61 @@ class OnboardingActivity : BaseActivity() {
                 }
             }
         })
+        binding.btnNext.setSafeClickListenertools {
+            val viewPager = binding.viewPager
+            viewPager?.let {
+                if (it.currentItem < (it.adapter?.itemCount?.minus(1) ?: 0)) {
+                    it.currentItem += 1
+                } else {
+                    // last page -> finish onboarding
+                    if (RemoteConfigManager.isOnboardingInterstitalEnabled()) {
+                        ProgressUtils.show(this, getString(R.string.loading_ad_))
+                        Ads.loadAndShowInterstitial(
+                            activity = this,
+                            adUnitId = RemoteConfigManager.getOnBoardingInterstitialId(),
+                            placement = "onboarding",
+                            useAnyCachedFallback = true,
+                            showDelayMs = 0
+                        ) { loaded, failed, showed, dismissed ->
+                            when {
+                                failed -> {
+                                    goToPermissionScreen()
+                                }
+
+                                dismissed -> {
+                                    goToPermissionScreen()
+                                }
+
+                                loaded -> {
+                                    // optional: ad ready
+                                }
+
+                                showed -> {
+                                    // ad is showing
+                                }
+                            }
+                        }
+                    } else {
+                        // If disabled → skip ads and go directly
+                        goToPermissionScreen()
+                    }
+                }
+            }
+        }
+
         val adapter = OnboardingAdapter(this, pages)
         binding.viewPager.adapter = adapter
     }
-
+    private fun goToPermissionScreen() {
+        ProgressUtils.dismiss()
+        if (!OnboardingActivity.fromsettings) {
+            val mainIntent = Intent(this, MainActivity::class.java)
+            startActivity(mainIntent)
+            finish()
+        } else {
+            finish()
+        }
+    }
     private fun loadbannerad(){
         binding.cvAdContainerbanner.visibility=View.VISIBLE
         AdBanner.loadBannerAdsplash(this,binding.cvAdContainerbanner,RemoteConfigManager.getOnBoardingBannerId(),false,binding.loadingLayoutbanner,true)

@@ -55,34 +55,9 @@ class NativeAdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(position=="1-2"){
-            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.indi2))
-            if(RemoteConfigManager.isOnboardingNativeFull1Enabled()){
-                loadnative1()
-            }
 
-        }else if(position=="2-3"){
-            if (RemoteConfigManager.isOnboardingNativeFull1Enabled()) {
-                binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.indi4))
-            } else {
-                binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.indi3))
-            }
-            if(RemoteConfigManager.isOnboardingNativeFull2Enabled()){
-                loadnative2()
-            }
 
-        }
-        binding.btnNext.setSafeClickListenertools{
-            val viewPager = activity?.findViewById<ViewPager2>(
-                R.id.viewPager
-            )
-            viewPager?.let {
-                if (it.currentItem < (it.adapter?.itemCount?.minus(1) ?: 0)) {
-                    it.currentItem += 1
-                }
-            }
 
-        }
     }
 
     override fun onResume() {

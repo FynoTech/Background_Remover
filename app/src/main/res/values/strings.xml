@@ -5,16 +5,16 @@
     <string name="select">Select</string>
     <string name="Choose_Language">Choose Language</string>
     <string name="apply">Apply</string>
-    <string name="remove_background">Remove Background</string>
-    <string name="change_background">AI Remove Background</string>
-    <string name="remove_object">Background Eraser</string>
-    <string name="instantly_erase_distractions_and_highlight_your_subject">Remove and replace background</string>
-    <string name="give_your_subject_a_fresh_new_look_in_seconds">One tap automatic background remover</string>
-    <string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Auto remove background</string>
+    <string name="remove_background">Erase Background</string>
+    <string name="change_background">AI Eraser Background</string>
+    <string name="remove_object">AI Background Eraser</string>
+    <string name="instantly_erase_distractions_and_highlight_your_subject">Remove and Erase Background</string>
+    <string name="give_your_subject_a_fresh_new_look_in_seconds">One Tap Automatic Background Eraser</string>
+    <string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Auto Erase Background</string>
     <string name="languages">Languages</string>
     <string name="open">Open</string>
     <string name="share">Share</string>
-    <string name="background">Background Eraser</string>
+    <string name="background">AI Background Eraser</string>
     <string name="make_every_photo_perfect">Make every photo perfect</string>
     <string name="animation">Animation</string>
     <string name="version">Version</string>
@@ -65,7 +65,7 @@
     <string name="premium">Premium</string>
     <string name="rate_app">Rate App</string>
     <string name="feedback"><![CDATA[Terms & Condition]]></string>
-    <string name="howto">How to Use</string>
+    <string name="howto">How to Use?</string>
     <string name="create_like_a_pro">Create Like a Pro</string>
     <string name="ad_free_experience">Ad-Free</string>
     <string name="faster_conversions">Fast Convert</string>
@@ -88,4 +88,7 @@
     <string name="before">Before</string>
     <string name="after">After</string>
     <string name="save1">Save</string>
+    <string name="this_app_contains_ads">This App contains Ads</string>
+    <string name="already_removed">Background Already Erased</string>
+    <string name="watchad">Watch AD</string>
 </resources>
