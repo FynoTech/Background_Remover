@@ -5,9 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.example.background_remove.databinding.FragmentNativeAdBinding
+import com.example.background_remove.adsManager.NativeAdManager
+import com.example.background_remove.utils.RemoteConfigManager
+import com.example.background_remove.utils.setSafeClickListenertools
+
+import com.photo.editor.background.eraser.bgeraser.R
+import com.photo.editor.background.eraser.bgeraser.databinding.FragmentNativeAdBinding
+
 
 
 class NativeAdFragment : Fragment() {
@@ -48,7 +55,34 @@ class NativeAdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if(position=="1-2"){
+            binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.indi2))
+            if(RemoteConfigManager.isOnboardingNativeFull1Enabled()){
+                loadnative1()
+            }
 
+        }else if(position=="2-3"){
+            if (RemoteConfigManager.isOnboardingNativeFull1Enabled()) {
+                binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.indi4))
+            } else {
+                binding.ivindicator.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.indi3))
+            }
+            if(RemoteConfigManager.isOnboardingNativeFull2Enabled()){
+                loadnative2()
+            }
+
+        }
+        binding.btnNext.setSafeClickListenertools{
+            val viewPager = activity?.findViewById<ViewPager2>(
+                R.id.viewPager
+            )
+            viewPager?.let {
+                if (it.currentItem < (it.adapter?.itemCount?.minus(1) ?: 0)) {
+                    it.currentItem += 1
+                }
+            }
+
+        }
     }
 
     override fun onResume() {
@@ -61,15 +95,16 @@ class NativeAdFragment : Fragment() {
 
         }
     }
-    /*fun loadnative1(){
+    fun loadnative1(){
         NativeAdManager.loadAndShowNativeAd(
             activity = requireActivity(),
-            adUnitId = RemoteConfigManager.getOnBoardingNativeFull1AdId(),
+            adUnitId = RemoteConfigManager.getOnBoardingNativeAdIdFull1(),
             container = binding.cvAdContainerNative,
-            style = NativeAdManager.NativeStyle.FULL,binding.loadingLayoutNative
+            style = 4,binding.loadingLayoutNative
         ) { loaded, failed, fromCache ->
             Log.d("Ads", "Native Ad loaded=$loaded failed=$failed fromCache=$fromCache")
             if(failed){
+                failed1=true
                 binding.cvAdContainerNative.visibility= View.GONE
                 moveToNextPage()
             }
@@ -78,17 +113,18 @@ class NativeAdFragment : Fragment() {
     fun loadnative2(){
         NativeAdManager.loadAndShowNativeAd(
             activity = requireActivity(),
-            adUnitId = RemoteConfigManager.getOnBoardingNativeFull2AdId(),
+            adUnitId = RemoteConfigManager.getOnBoardingNativeAdIdFull2(),
             container = binding.cvAdContainerNative,
-            style = NativeAdManager.NativeStyle.FULL,binding.loadingLayoutNative
+            style = 4,binding.loadingLayoutNative
         ) { loaded, failed, fromCache ->
             Log.d("Ads", "Native Ad loaded=$loaded failed=$failed fromCache=$fromCache")
             if(failed){
+                failed2=true
                 binding.cvAdContainerNative.visibility= View.GONE
                 moveToNextPage()
             }
         }
-    }*/
+    }
     private fun moveToNextPage() {
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
         viewPager?.let {

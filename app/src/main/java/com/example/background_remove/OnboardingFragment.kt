@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.example.background_remove.databinding.FragmentOnboardingBinding
-
+import com.example.background_remove.adsManager.Ads
 import com.example.background_remove.utils.ProgressUtils
-
+import com.example.background_remove.utils.RemoteConfigManager
 import com.example.background_remove.utils.setSafeClickListenertools
+import com.photo.editor.background.eraser.bgeraser.R
+import com.photo.editor.background.eraser.bgeraser.databinding.FragmentOnboardingBinding
 
 
 class OnboardingFragment : Fragment() {
@@ -24,7 +25,6 @@ class OnboardingFragment : Fragment() {
         private const val ARG_DESC = "arg_desc"
         private const val ARG_IMAGE = "arg_image"
         private const val ARG_INDI = "arg_indi"
-        private const val ARG_BTN = "arg_btn"
 
         fun newInstance(
             title: String,
@@ -64,18 +64,18 @@ class OnboardingFragment : Fragment() {
             ivindicator.setImageResource(arguments?.getInt(ARG_INDI) ?: 0)
             btnNext.setSafeClickListenertools{
                 val viewPager = activity?.findViewById<ViewPager2>(
-               R.id.viewPager
+                    R.id.viewPager
                 )
                 viewPager?.let {
                     if (it.currentItem < (it.adapter?.itemCount?.minus(1) ?: 0)) {
                         it.currentItem += 1
                     } else {
-                     /*   // last page -> finish onboarding
-                        if (RemoteConfigManager.isOnboardingInterstitialEnabled()) {
+                        // last page -> finish onboarding
+                        if (RemoteConfigManager.isOnboardingInterstitalEnabled()) {
                             ProgressUtils.show(requireContext(),getString(R.string.loading_ad_))
                             Ads.loadAndShowInterstitial(
                                 activity = requireActivity(),
-                                adUnitId = RemoteConfigManager.getOnBoardingInterstitalAdId(),
+                                adUnitId = RemoteConfigManager.getOnBoardingInterstitialId(),
                                 placement = "onboarding",
                                 useAnyCachedFallback = true,
                                 showDelayMs = 0
@@ -87,18 +87,18 @@ class OnboardingFragment : Fragment() {
                                     }
                                     dismissed  -> {  goToPermissionScreen()
                                     }
-                                    loaded     -> { *//* optional: ad ready *//* }
+                                    loaded     -> { /* optional: ad ready */ }
                                     showed     ->
                                     {
 
                                     }
                                 }
                             }
-                        } else {*/
+                        } else {
                             // If disabled → skip ads and go directly
                             goToPermissionScreen()
                         }
-
+                    }
                 }
 
             }
@@ -106,9 +106,13 @@ class OnboardingFragment : Fragment() {
     }
     private fun goToPermissionScreen() {
         ProgressUtils.dismiss()
-        val mainIntent = Intent(requireContext(), MainActivity::class.java)
-        startActivity(mainIntent)
-        activity?.finish()
+        if (!OnboardingActivity.fromsettings) {
+            val mainIntent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(mainIntent)
+            activity?.finish()
+        } else {
+            requireActivity().finish()
+        }
     }
 
     override fun onDestroyView() {

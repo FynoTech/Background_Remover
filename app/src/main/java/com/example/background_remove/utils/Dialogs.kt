@@ -14,7 +14,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-import com.example.background_remove.R
+import com.photo.editor.background.eraser.bgeraser.R
+
 
 object Dialogs {
 
@@ -113,7 +114,7 @@ object Dialogs {
         dialog.show()
     }
     private var dialogloading: Dialog? = null
-   /* fun dismissProgressDialogloading() {
+    fun dismissProgressDialogloading() {
         try {
             dialogloading?.dismiss()
             dialogloading = null
@@ -123,32 +124,6 @@ object Dialogs {
 
     }
 
-    fun showSignatureDialog(
-        context: Context,
-
-        onConfirm: (Bitmap) -> Unit
-    ) {
-        val dialog = Dialog(context)
-        dialog.setContentView(R.layout.dialog_pdf_signature) // your XML above
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-
-
-
-
-        val btnOk = dialog.findViewById<Button>(R.id.btnOk)
-        val bitmap = dialog.findViewById<SignatureView>(R.id.signature)
-
-
-        btnOk.setSafeClickListener(context) {
-            dialog.dismiss()
-            onConfirm(bitmap.getSignatureBitmap())
-            bitmap.clear()
-        }
-
-        dialog.setCancelable(true)
-        dialog.show()
-    }
     fun showProgressDialogloading(context: Context): Boolean {
         // Inflate the custom layout
         if (context is Activity) {
@@ -187,6 +162,5 @@ object Dialogs {
     }
 
 
-*/
 
 }

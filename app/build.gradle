@@ -1,38 +1,43 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.gms.google-services'
 }
 
 android {
-    namespace 'com.example.background_remove'
+    namespace 'com.photo.editor.background.eraser.bgeraser'
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.example.background_remove"
+        applicationId "com.photo.editor.background.eraser.bgeraser"
         minSdk 26
         targetSdk 36
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
         }
     }
     buildFeatures{
         viewBinding=true
         buildConfig=true
+
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '11'
     }
     bundle {
         language {
@@ -56,13 +61,18 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-crashlytics-ndk")
+    implementation 'com.google.android.gms:play-services-ads:23.3.0'
     implementation("com.airbnb.android:lottie:6.3.0")
+    implementation "com.android.billingclient:billing-ktx:7.1.1"
     implementation("com.google.firebase:firebase-config")
     implementation 'com.intuit.sdp:sdp-android:1.1.1'
+    implementation 'com.google.android.play:app-update-ktx:2.1.0'
     // Add the dependency for the Firebase SDK for Google Analytics
     implementation("com.google.firebase:firebase-analytics")
     implementation libs.user.messaging.platform
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation libs.androidx.activity
+    implementation libs.androidx.lifecycle.process
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

@@ -5,8 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.background_remove.DrawView
-import com.example.background_remove.R
+import com.example.background_remove.utils.setSafeClickListener
+import com.example.background_remove.utils.setSafeClickListenertools
+
+import com.photo.editor.background.eraser.bgeraser.R
 
 class ColorAdapter(
     private val colors: List<Int?>,
@@ -36,7 +38,7 @@ class ColorAdapter(
         }
 
         // Click listener
-        holder.itemView.setOnClickListener {
+        holder.itemView.setSafeClickListener(holder.itemView.context) {
             onColorClick(colors[position]) // pass clicked color back
         }
     }

@@ -7,19 +7,13 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
-import kotlinx.coroutines.*
-import java.util.*
 import kotlin.math.abs
+import java.util.*
 
 class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
-    // live path shown while the user draws
-    private var livePath = Path()
-
-    // paints that are actually applied to the working bitmap
+    // --- Paints ---
     private val erasePaint = Paint().apply {
         isAntiAlias = true
         isDither = true
@@ -28,13 +22,13 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         strokeJoin = Paint.Join.ROUND
         strokeCap = Paint.Cap.ROUND
         strokeWidth = 60f
-        xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) // erase -> transparent
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
     }
 
     private val repairPaint = Paint().apply {
         isAntiAlias = true
         isDither = true
-        color = Color.BLACK // color isn't used directly for repair; we restore from saved image
+        color = Color.BLACK
         style = Paint.Style.STROKE
         strokeJoin = Paint.Join.ROUND
         strokeCap = Paint.Cap.ROUND
@@ -42,24 +36,25 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         xfermode = null
     }
 
-    // preview paint used to show the stroke while drawing (so user sees it)
     private val previewPaint = Paint().apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
         strokeJoin = Paint.Join.ROUND
         strokeCap = Paint.Cap.ROUND
         strokeWidth = erasePaint.strokeWidth
-        color = Color.argb(160, 255, 255, 255) // semi-transparent white for erase preview
+        color = Color.argb(160, 255, 255, 255)
     }
 
     private var currentPaint: Paint = erasePaint
     private var background: Int = Color.TRANSPARENT
 
-    // Working and original bitmaps
-    private var savedImageBitmap: Bitmap? = null         // original (immutable copy)
-    private var savedImageBitmapScaled: Bitmap? = null   // original scaled to view size
-    private var workingBitmap: Bitmap? = null            // ARGB_8888 buffer we edit
-    private var bufferCanvas: Canvas? = null             // canvas for workingBitmap
+    // --- Bitmaps ---
+    private var savedImageBitmap: Bitmap? = null
+    private var savedImageBitmapScaled: Bitmap? = null
+    private var workingBitmap: Bitmap? = null
+    private var bufferCanvas: Canvas? = null
+
+    // --- Pan & Zoom ---
     private var scaleFactor = 1f
     private var minScale = 1f
     private var maxScale = 4f
@@ -68,103 +63,35 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var posX = 0f
     private var posY = 0f
 
-    // Undo / redo as bitmap snapshots for simplicity
+    // Offset to center bitmap
+    private var bitmapOffsetX = 0f
+    private var bitmapOffsetY = 0f
+
+    // --- Undo / Redo ---
     private val undoStack: ArrayDeque<Bitmap> = ArrayDeque()
     private val redoStack: ArrayDeque<Bitmap> = ArrayDeque()
     private val maxHistory = 20
 
+    // --- Drawing ---
+    private var livePath = Path()
     private var pathX = 0f
     private var pathY = 0f
     private val TOUCH_TOLERANCE = 4f
-    private val COLOR_TOLERANCE = 20f
 
+    // --- UI buttons ---
     private var undoButton: ImageView? = null
     private var redoButton: ImageView? = null
 
-
-    enum class DrawViewAction {
-        AUTO_SELFIE, MANUAL_CLEAR, MANUAL_REPAIR, ZOOM,CROP
-    }
-
+    // --- Actions ---
+    enum class DrawViewAction { AUTO_SELFIE, MANUAL_CLEAR, MANUAL_REPAIR, ZOOM, CROP }
     private var currentAction: DrawViewAction = DrawViewAction.MANUAL_CLEAR
 
-    // --- Public API ---
-    fun setButtons(undoBtn: ImageView?, redoBtn: ImageView?) {
-        undoButton = undoBtn
-        redoButton = redoBtn
-        resetZoom()
-
-        updateButtons()
-    }
-
-
-
-    fun setStrokeWidth(px: Int) {
-        erasePaint.strokeWidth = px.toFloat()
-        repairPaint.strokeWidth = px.toFloat()
-        previewPaint.strokeWidth = px.toFloat()
-    }
-
-    fun setAction(action: DrawViewAction) {
-        currentAction = action
-        currentPaint = if (action == DrawViewAction.MANUAL_REPAIR) repairPaint else erasePaint
-        // preview color: white when erasing, black when repairing
-        previewPaint.color = if (action == DrawViewAction.MANUAL_REPAIR)
-            Color.argb(180, 0, 0, 0) else Color.argb(160, 255, 255, 255)
-        invalidate()
-    }
-
-    fun getBitmap(): Bitmap? {
-        workingBitmap ?: return null
-
-        // Create final output the same size as the View (not just working bitmap)
-        val finalBitmap = Bitmap.createBitmap(
-            width,
-            height,
-            Bitmap.Config.ARGB_8888
-        )
-
-        val canvas = Canvas(finalBitmap)
-
-        // Background color
-        canvas.drawColor(background)
-
-        // Apply current transformations (pan + zoom)
-        canvas.save()
-        canvas.translate(posX, posY)
-        canvas.scale(scaleFactor, scaleFactor, focusX, focusY)
-
-        // Draw the working bitmap
-        workingBitmap?.let {
-            canvas.drawBitmap(it, 0f, 0f, null)
-        }
-
-
-
-
-        canvas.restore()
-
-        return finalBitmap
-    }
-    // --- Bitmap setup/resizing ---
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        // If we already have an original saved bitmap, scale it into workingBitmap now
-        savedImageBitmap?.let { original ->
-            savedImageBitmapScaled = Bitmap.createScaledBitmap(original, w, h, true)
-            savedImageBitmapScaled = savedImageBitmapScaled?.copy(Bitmap.Config.ARGB_8888, true)
-            workingBitmap = savedImageBitmapScaled?.copy(Bitmap.Config.ARGB_8888, true)
-            bufferCanvas = workingBitmap?.let { Canvas(it) }
-            clearHistory() // new image resets history
-            invalidate()
-        }
-    }
+    // --- Gesture detectors ---
     private val scaleDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             val prevScale = scaleFactor
             scaleFactor = (scaleFactor * detector.scaleFactor).coerceIn(minScale, maxScale)
 
-            // focus point keeps zoom centered around fingers
             val scaleChange = scaleFactor / prevScale
             posX = (posX - detector.focusX) * scaleChange + detector.focusX
             posY = (posY - detector.focusY) * scaleChange + detector.focusY
@@ -186,9 +113,28 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         }
     })
 
-    /**
-     * Provide the source bitmap (usually the loaded image). We'll keep a copy and scale it when view size is known.
-     */
+    // --- Public API ---
+    fun setButtons(undoBtn: ImageView?, redoBtn: ImageView?) {
+        undoButton = undoBtn
+        redoButton = redoBtn
+        resetZoom()
+        updateButtons()
+    }
+
+    fun setStrokeWidth(px: Int) {
+        erasePaint.strokeWidth = px.toFloat()
+        repairPaint.strokeWidth = px.toFloat()
+        previewPaint.strokeWidth = px.toFloat()
+    }
+
+    fun setAction(action: DrawViewAction) {
+        currentAction = action
+        currentPaint = if (action == DrawViewAction.MANUAL_REPAIR) repairPaint else erasePaint
+        previewPaint.color = if (action == DrawViewAction.MANUAL_REPAIR)
+            Color.argb(180, 0, 0, 0) else Color.argb(160, 255, 255, 255)
+        invalidate()
+    }
+
     fun setBitmap(bitmap: Bitmap?) {
         if (bitmap == null) {
             savedImageBitmap = null
@@ -200,52 +146,140 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
             return
         }
 
-        // keep original (not necessarily view-sized)
         savedImageBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
-
-        // If view already measured, scale & prepare working bitmap now; otherwise wait for onSizeChanged.
         if (width > 0 && height > 0) {
-            savedImageBitmapScaled = Bitmap.createScaledBitmap(savedImageBitmap!!, width, height, true)
-            savedImageBitmapScaled = savedImageBitmapScaled?.copy(Bitmap.Config.ARGB_8888, true)
+            savedImageBitmapScaled = scaleBitmapToFitView(savedImageBitmap!!, width, height)
             workingBitmap = savedImageBitmapScaled?.copy(Bitmap.Config.ARGB_8888, true)
-            bufferCanvas = workingBitmap?.let { Canvas(it) }
+            bufferCanvas = Canvas(workingBitmap!!)
             clearHistory()
         }
         invalidate()
     }
 
-    private fun clearHistory() {
-        undoStack.clear()
-        redoStack.clear()
-        updateButtons()
+    fun setColor(transparent: Int) {
+        background = transparent
+        invalidate()
     }
 
-    // --- Drawing / commit logic ---
+    fun getBitmap(): Bitmap? {
+        workingBitmap ?: return null
+        val finalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(finalBitmap)
+        canvas.drawColor(background)
+        canvas.save()
+        canvas.translate(posX + bitmapOffsetX, posY + bitmapOffsetY)
+        canvas.scale(scaleFactor, scaleFactor, focusX, focusY)
+        workingBitmap?.let { canvas.drawBitmap(it, 0f, 0f, null) }
+        canvas.restore()
+        return finalBitmap
+    }
+
+    fun resetZoom() {
+        scaleFactor = 1f
+        posX = 0f
+        posY = 0f
+        invalidate()
+    }
+
+    fun beforeAutoSelfie() { pushHistorySnapshot() }
+
+    fun afterAutoSelfie(segmented: Bitmap) {
+        savedImageBitmapScaled = scaleBitmapToFitView(segmented, width, height)
+        workingBitmap = savedImageBitmapScaled?.copy(Bitmap.Config.ARGB_8888, true)
+        bufferCanvas = Canvas(workingBitmap!!)
+        updateButtons()
+        invalidate()
+    }
+
+    // --- Override ---
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        savedImageBitmap?.let {
+            savedImageBitmapScaled = scaleBitmapToFitView(it, w, h)
+            workingBitmap = savedImageBitmapScaled?.copy(Bitmap.Config.ARGB_8888, true)
+            bufferCanvas = Canvas(workingBitmap!!)
+            clearHistory()
+            invalidate()
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        setLayerType(LAYER_TYPE_SOFTWARE, null) // Needed for transparency
-        setBackgroundColor(background)   // View itself transparent
+        setLayerType(LAYER_TYPE_SOFTWARE, null)
+        setBackgroundColor(background)
+
         canvas.save()
         canvas.translate(posX, posY)
         canvas.scale(scaleFactor, scaleFactor, focusX, focusY)
-
-        workingBitmap?.let { canvas.drawBitmap(it, 0f, 0f, null) }
-
-        if (!livePath.isEmpty) {
-            canvas.drawPath(livePath, previewPaint)
-        }
-
+        workingBitmap?.let { canvas.drawBitmap(it, bitmapOffsetX, bitmapOffsetY, null) }
+        if (!livePath.isEmpty) canvas.drawPath(livePath, previewPaint)
         canvas.restore()
     }
 
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (workingBitmap == null) return super.onTouchEvent(event)
 
+        val x = event.x
+        val y = event.y
+
+        when (currentAction) {
+            DrawViewAction.ZOOM -> {
+                scaleDetector.onTouchEvent(event)
+                gestureDetector.onTouchEvent(event)
+                return true
+            }
+
+            DrawViewAction.MANUAL_CLEAR, DrawViewAction.MANUAL_REPAIR -> {
+                val bitmapX = (x - posX - bitmapOffsetX) / scaleFactor
+                val bitmapY = (y - posY - bitmapOffsetY) / scaleFactor
+
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        parent.requestDisallowInterceptTouchEvent(true)
+                        pathX = bitmapX
+                        pathY = bitmapY
+                        livePath.reset()
+                        livePath.moveTo(bitmapX, bitmapY)
+                        pushHistorySnapshot()
+                        invalidate()
+                        return true
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        val dx = abs(bitmapX - pathX)
+                        val dy = abs(bitmapY - pathY)
+                        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+                            livePath.quadTo(pathX, pathY, (bitmapX + pathX) / 2f, (bitmapY + pathY) / 2f)
+                            pathX = bitmapX
+                            pathY = bitmapY
+                        }
+                        invalidate()
+                        return true
+                    }
+
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        livePath.lineTo(pathX, pathY)
+                        applyPathToBitmap(Path(livePath))
+                        livePath.reset()
+                        updateButtons()
+                        invalidate()
+                        parent.requestDisallowInterceptTouchEvent(false)
+                        return true
+                    }
+                }
+            }
+
+            else -> return super.onTouchEvent(event)
+        }
+        return true
+    }
+
+    // --- Undo/Redo ---
     private fun pushHistorySnapshot() {
         workingBitmap?.let {
-            // keep snapshot copy
             val snap = it.copy(Bitmap.Config.ARGB_8888, true)
             undoStack.addLast(snap)
             if (undoStack.size > maxHistory) undoStack.removeFirst()
-            // new action clears redo history
             redoStack.clear()
             updateButtons()
         }
@@ -253,9 +287,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     fun undo() {
         if (undoStack.isNotEmpty()) {
-            workingBitmap?.let {
-                redoStack.addLast(it.copy(Bitmap.Config.ARGB_8888, true))
-            }
+            workingBitmap?.let { redoStack.addLast(it.copy(Bitmap.Config.ARGB_8888, true)) }
             val prev = undoStack.removeLast()
             workingBitmap = prev.copy(Bitmap.Config.ARGB_8888, true)
             bufferCanvas = Canvas(workingBitmap!!)
@@ -266,9 +298,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     fun redo() {
         if (redoStack.isNotEmpty()) {
-            workingBitmap?.let {
-                undoStack.addLast(it.copy(Bitmap.Config.ARGB_8888, true))
-            }
+            workingBitmap?.let { undoStack.addLast(it.copy(Bitmap.Config.ARGB_8888, true)) }
             val nxt = redoStack.removeLast()
             workingBitmap = nxt.copy(Bitmap.Config.ARGB_8888, true)
             bufferCanvas = Canvas(workingBitmap!!)
@@ -282,97 +312,41 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         redoButton?.isEnabled = redoStack.isNotEmpty()
     }
 
-    // Touch handling: build live path, then commit to workingBitmap on up
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        // ignore gestures (zoom) — caller toggles action to ZOOM when needed
-        if (workingBitmap == null ) return super.onTouchEvent(event)
-        if (currentAction == DrawViewAction.ZOOM) {
-            scaleDetector.onTouchEvent(event)
-            gestureDetector.onTouchEvent(event)
-            return true
-        }
-        val x = event.x
-        val y = event.y
-
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                parent.requestDisallowInterceptTouchEvent(true)
-                pathX = x
-                pathY = y
-                livePath.reset()
-                livePath.moveTo(x, y)
-                // before changing the bitmap, store snapshot for undo
-                pushHistorySnapshot()
-                invalidate()
-                return true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                val dx = abs(x - pathX)
-                val dy = abs(y - pathY)
-
-                 if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-                    livePath.quadTo(pathX, pathY, (x + pathX) / 2f, (y + pathY) / 2f)
-                    pathX = x
-                    pathY = y
-                }
-                invalidate()
-                return true
-            }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                livePath.lineTo(pathX, pathY)
-                // commit livePath to workingBitmap
-                applyPathToBitmap(Path(livePath)) // pass a copy
-                livePath.reset()
-                updateButtons()
-                invalidate()
-                parent.requestDisallowInterceptTouchEvent(false)
-                return true
-            }
-        }
-        return super.onTouchEvent(event)
-    }
-    fun beforeAutoSelfie() {
-        // Save current state for undo before applying ML segmentation
-        pushHistorySnapshot()
-
-    }
-    fun resetZoom() {
-        scaleFactor = 1f
-        posX = 0f
-        posY = 0f
-        invalidate()
-    }
-    fun afterAutoSelfie(segmented: Bitmap) {
-        // Replace working bitmap with new segmented result
-        workingBitmap = segmented.copy(Bitmap.Config.ARGB_8888, true)
-        bufferCanvas = Canvas(workingBitmap!!)
-
-
+    private fun clearHistory() {
+        undoStack.clear()
+        redoStack.clear()
         updateButtons()
-        invalidate()
     }
 
-    /**
-     * Commit the provided path to the working bitmap, using the current action:
-     * - MANUAL_CLEAR: draw path with erasePaint (CLEAR xfermode)
-     * - MANUAL_REPAIR: restore pixels from savedImageBitmapScaled under the path region
-     */
+    // --- Bitmap helpers ---
+    private fun scaleBitmapToFitView(bitmap: Bitmap, viewWidth: Int, viewHeight: Int): Bitmap {
+        val srcWidth = bitmap.width
+        val srcHeight = bitmap.height
+        val scale = minOf(viewWidth.toFloat() / srcWidth, viewHeight.toFloat() / srcHeight)
+        val scaledWidth = (srcWidth * scale).toInt()
+        val scaledHeight = (srcHeight * scale).toInt()
+        bitmapOffsetX = (viewWidth - scaledWidth) / 2f
+        bitmapOffsetY = (viewHeight - scaledHeight) / 2f
+        return Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true)
+    }
+
     private fun applyPathToBitmap(path: Path) {
         if (workingBitmap == null) return
         bufferCanvas ?: run { bufferCanvas = Canvas(workingBitmap!!) }
 
+        val translatedPath = Path(path)
+        val matrix = Matrix()
+        matrix.setTranslate(-bitmapOffsetX, -bitmapOffsetY)
+        translatedPath.transform(matrix)
+
         when (currentAction) {
-            DrawViewAction.MANUAL_CLEAR -> {
-                // Erase: draw path directly with CLEAR xfermode -> transparent pixels
-                bufferCanvas!!.drawPath(path, erasePaint)
-            }
+            DrawViewAction.MANUAL_CLEAR -> bufferCanvas!!.drawPath(translatedPath, erasePaint)
 
             DrawViewAction.MANUAL_REPAIR -> {
                 val src = savedImageBitmapScaled ?: return
                 val w = workingBitmap!!.width
                 val h = workingBitmap!!.height
 
-                // Create mask bitmap with stroke (NOT fill) so stroke width is respected
                 val mask = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
                 val mCanvas = Canvas(mask)
                 val mPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -382,9 +356,8 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                     strokeWidth = repairPaint.strokeWidth
                     color = Color.WHITE
                 }
-                mCanvas.drawPath(path, mPaint)
+                mCanvas.drawPath(translatedPath, mPaint)
 
-                // Extract masked portion from original
                 val restored = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
                 val rCanvas = Canvas(restored)
                 rCanvas.drawBitmap(src, 0f, 0f, null)
@@ -392,25 +365,13 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
                     xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
                 }
                 rCanvas.drawBitmap(mask, 0f, 0f, maskPaint)
-
-                // Apply restored stroke to working bitmap
                 bufferCanvas!!.drawBitmap(restored, 0f, 0f, null)
 
                 mask.recycle()
                 restored.recycle()
             }
 
-            else -> {
-                // other actions not applied here
-            }
+            else -> {}
         }
     }
-
-    fun setColor(transparent: Int) {
-        background=transparent
-        invalidate()
-
-    }
-
-
 }

@@ -4,5 +4,10 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+    <style name="CropImageTheme" parent="Base.Theme.AppCompat">
+        <!-- Let content fit system windows -->
+        <item name="android:fitsSystemWindows">true</item>
 
+
+    </style>
 </resources>

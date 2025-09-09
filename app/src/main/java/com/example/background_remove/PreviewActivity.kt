@@ -13,14 +13,22 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
-import com.example.background_remove.databinding.ActivityPreviewBinding
+import com.example.background_remove.adsManager.AdBanner
+import com.example.background_remove.adsManager.Ads
+import com.example.background_remove.adsManager.NativeAdManager
+
 import com.example.background_remove.utils.ProgressUtils
+import com.example.background_remove.utils.RemoteConfigManager
 import com.example.background_remove.utils.ResetGradientColor
 import com.example.background_remove.utils.setGradientColor
 import com.example.background_remove.utils.setSafeClickListener
 import com.example.background_remove.utils.setupStatusBar
+import com.photo.editor.background.eraser.bgeraser.R
+import com.photo.editor.background.eraser.bgeraser.databinding.ActivityPreviewBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,10 +50,18 @@ class PreviewActivity : BaseActivity() {
         setupStatusBar(window, Color.BLACK)
         setContentView(binding.root)
 
-        binding.imageview.setImageBitmap(ProgressUtils.bitmap)
+        binding.afterImage.setImageBitmap(ProgressUtils.bitmap)
+        binding.beforeImage.setImageBitmap(ProgressUtils.beforebitmap)
 
 
 
+        if (RemoteConfigManager.isResultBannerEnabled()) {
+            binding.cvAdContainerbanner.visibility = View.VISIBLE
+            loadbannerad()
+        } else if (RemoteConfigManager.isResultNativeEnabled()) {
+            binding.cvAdContainernative.visibility = View.VISIBLE
+            loadnativead()
+        }
 
         binding.imagewithwatermark.setSafeClickListener(this) {
             withWatermark = true
@@ -80,7 +96,7 @@ class PreviewActivity : BaseActivity() {
         }
 
         // ✅ Save button
-        binding.btnSave.setSafeClickListener(this) {
+        binding.btnSave.setSafeClickListener(this,check = RemoteConfigManager.isRewardedAdEnabled(), type = "rewarded") {
             showSaveDialog()
         }
 
@@ -94,7 +110,7 @@ class PreviewActivity : BaseActivity() {
                 }
                 startActivity(Intent.createChooser(shareIntent, "Share Image"))
             } else {
-                showToast("Please save the image first before sharing")
+                showToast(getString(R.string.please_save_the_image_first_before_sharing))
             }
         }
     }
@@ -103,11 +119,66 @@ class PreviewActivity : BaseActivity() {
         // ✅ Dialog for save options
     private fun showSaveDialog() {
 
+            if (RemoteConfigManager.isRewardedAdEnabled() && !withWatermark) {
+                ProgressUtils.show(this,getString(R.string.loading_ad_))
+                Ads.loadAndShowRewarded(
+                    this,
+                    RemoteConfigManager.getRewaredAdId(),
+                    showDelayMs = 0L
+                ) { loaded, failed, showed, dismissed, rewarded ->
+                    when {
+                        loaded -> {
+                            ProgressUtils.dismiss()
+                        }
+                        failed -> {
+                            ProgressUtils.dismiss()
+                            saveImage(withWatermark)
+                        }
+                        showed -> {
+                            saveImage(withWatermark)
+
+                        }
+                        dismissed -> {
+
+                        }
+                        rewarded -> {
+
+                        }
+                    }
+                }
+            } else {
                 saveImage(withWatermark)
+            }
+
+
+        }
+    private fun loadbannerad(){
+        binding.cvAdContainerbanner.visibility=View.VISIBLE
+        AdBanner.loadBannerAdsplash(this,binding.cvAdContainerbanner,RemoteConfigManager.getResultBannerAdId(),false,binding.loadingLayoutbanner,true)
+            .callback {
+                    loaded, failed ->
+                if(failed){
+                    binding.cvAdContainerbanner.visibility= View.GONE
+                }
+
+            }
+    }
+    private fun loadnativead(){
+        binding.cvAdContainernative.visibility=View.VISIBLE
+        NativeAdManager.loadAndShowNativeAd(
+            activity = this,
+            adUnitId = RemoteConfigManager.getResultNativeAdId(),
+            container = binding.cvAdContainernative,
+            style = RemoteConfigManager.resultnativelayout(),binding.loadingLayoutnative
+        ) { loaded, failed, fromCache ->
+            Log.d("Ads", "Native Ad loaded=$loaded failed=$failed fromCache=$fromCache")
+            if(failed){
+                binding.cvAdContainernative.visibility= View.GONE
+            }
+        }
 
 
     }
-
 
     private fun saveImage(withWatermark: Boolean) {
         val originalBitmap = ProgressUtils.bitmap
@@ -135,7 +206,7 @@ class PreviewActivity : BaseActivity() {
                 }
             }
         } else {
-            showToast("No image found")
+            showToast(getString(R.string.no_image_found))
         }
     }
 

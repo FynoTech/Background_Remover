@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -23,13 +24,17 @@ import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
 
 import com.example.autobackgroundremover.OnBackgroundChangeListener
+import com.example.background_remove.adsManager.AdBanner
+import com.example.background_remove.adsManager.Ads
+import com.example.background_remove.adsManager.NativeAdManager
 
-import com.example.background_remove.databinding.ActivityEditorBinding
+
 import com.example.background_remove.utils.Dialogs
 import com.example.background_remove.utils.Dialogs.colors
 import com.example.background_remove.utils.Dialogs.showQuitDialog
 import com.example.background_remove.utils.Preferences
 import com.example.background_remove.utils.ProgressUtils
+import com.example.background_remove.utils.RemoteConfigManager
 
 import com.example.background_remove.utils.ResetGradientColor
 import com.example.background_remove.utils.ResetGradientDrawableColors
@@ -39,6 +44,8 @@ import com.example.background_remove.utils.setGradientDrawableColors
 import com.example.background_remove.utils.setSafeClickListener
 import com.example.background_remove.utils.setSafeClickListenertools
 import com.example.background_remove.utils.setupStatusBar
+import com.photo.editor.background.eraser.bgeraser.R
+import com.photo.editor.background.eraser.bgeraser.databinding.ActivityEditorBinding
 
 
 class EditorActivity : BaseActivity() {
@@ -75,14 +82,25 @@ class EditorActivity : BaseActivity() {
 
 
 
-        binding.done.setSafeClickListenertools {
+        binding.done.setSafeClickListener(this) {
             ProgressUtils.bitmap=binding.drawView.getBitmap()
             val intent = Intent(this, PreviewActivity::class.java)
             startActivity(intent)
 
 
         }
-
+        binding.back.setSafeClickListener(this) {
+            showQuitDialog(
+                context = this,
+                title = getString(R.string.quit),
+                onConfirm = {
+                    finish() // close the activity
+                },
+                onCancel = {
+                    Toast.makeText(this, getString(R.string.cancelled), Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
 
         val adapter = ColorAdapter(colors) { clickedColor ->
             if(clickedColor==null){
@@ -97,15 +115,50 @@ class EditorActivity : BaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
         // Auto Removal click
-        binding.layoutAutoRemoval.setSafeClickListenertools {
-            autoSelfie()
-            binding.manualClearSettingsLayout.visibility = android.view.View.GONE
-            binding.colorlayout.visibility = android.view.View.VISIBLE
-            selectItem(binding.layoutAutoRemoval)
+        binding.layoutAutoRemoval.setSafeClickListener(this,check = RemoteConfigManager.isRewardedAutoAdEnabled(), type = "rewarded") {
+            if (!RemoteConfigManager.isRewardedAutoAdEnabled()) {
+                autoSelfie()
+                binding.manualClearSettingsLayout.visibility = android.view.View.GONE
+                binding.colorlayout.visibility = android.view.View.VISIBLE
+                selectItem(binding.layoutAutoRemoval)
+            } else {
+                ProgressUtils.show(this,getString(R.string.loading_ad_))
+                Ads.loadAndShowRewarded(
+                    this,
+                    RemoteConfigManager.getRewardedAutoAdId(),
+                    showDelayMs = 0L
+                ) { loaded, failed, showed, dismissed, rewarded ->
+                    when {
+                        loaded -> {
+                            ProgressUtils.dismiss()
+                        }
+                        failed -> {
+                            ProgressUtils.dismiss()
+                            autoSelfie()
+                            binding.manualClearSettingsLayout.visibility = android.view.View.GONE
+                            binding.colorlayout.visibility = android.view.View.VISIBLE
+                            selectItem(binding.layoutAutoRemoval)
+                        }
+                        showed -> {
+
+
+                        }
+                        dismissed -> {
+                            autoSelfie()
+                            binding.manualClearSettingsLayout.visibility = android.view.View.GONE
+                            binding.colorlayout.visibility = android.view.View.VISIBLE
+                            selectItem(binding.layoutAutoRemoval)
+                        }
+                        rewarded -> {
+
+                        }
+                    }
+                }
+            }
         }
 
         // Manual click
-        binding.layoutManual.setSafeClickListenertools {
+        binding.layoutManual.setSafeClickListener(this) {
             binding.drawView.setAction(DrawView.DrawViewAction.MANUAL_CLEAR)
             binding.manualClearSettingsLayout.visibility = android.view.View.VISIBLE
             binding.colorlayout.visibility = android.view.View.GONE
@@ -113,7 +166,7 @@ class EditorActivity : BaseActivity() {
         }
 
         // Crop click
-        binding.layoutCrop.setSafeClickListenertools {
+        binding.layoutCrop.setSafeClickListener(this) {
             imageUri?.let { uri -> startCrop(uri) }
             binding.manualClearSettingsLayout.visibility = android.view.View.GONE
             binding.colorlayout.visibility = android.view.View.GONE
@@ -121,15 +174,21 @@ class EditorActivity : BaseActivity() {
         }
 
         // Repair click
-        binding.layoutRepair.setSafeClickListenertools {
+        binding.layoutRepair.setSafeClickListener(this) {
             binding.drawView.setAction(DrawView.DrawViewAction.MANUAL_REPAIR)
             binding.manualClearSettingsLayout.visibility = android.view.View.VISIBLE
             binding.colorlayout.visibility = android.view.View.GONE
             selectItem(binding.layoutRepair)
         }
-
+        if (RemoteConfigManager.isEditorBannerEnabled()) {
+            binding.cvAdContainerbanner.visibility = View.VISIBLE
+            loadbannerad()
+        } else if (RemoteConfigManager.isEditorNativeEnabled()) {
+            binding.cvAdContainernative.visibility = View.VISIBLE
+            loadnativead()
+        }
         // Zoom click
-        binding.layoutZoom.setSafeClickListenertools {
+        binding.layoutZoom.setSafeClickListener(this) {
             binding.drawView.setAction(DrawView.DrawViewAction.ZOOM)
             binding.manualClearSettingsLayout.visibility = android.view.View.GONE
             binding.colorlayout.visibility = android.view.View.GONE
@@ -143,7 +202,33 @@ class EditorActivity : BaseActivity() {
     }
 
 
+    private fun loadbannerad(){
+        binding.cvAdContainerbanner.visibility=View.VISIBLE
+        AdBanner.loadBannerAdsplash(this,binding.cvAdContainerbanner,RemoteConfigManager.getEditorBannerAdId(),false,binding.loadingLayoutbanner,true)
+            .callback {
+                    loaded, failed ->
+                if(failed){
+                    binding.cvAdContainerbanner.visibility= View.GONE
+                }
 
+            }
+    }
+    private fun loadnativead(){
+        binding.cvAdContainernative.visibility=View.VISIBLE
+        NativeAdManager.loadAndShowNativeAd(
+            activity = this,
+            adUnitId = RemoteConfigManager.getEditorNativeAdId(),
+            container = binding.cvAdContainernative,
+            style = 2,binding.loadingLayoutnative
+        ) { loaded, failed, fromCache ->
+            Log.d("Ads", "Native Ad loaded=$loaded failed=$failed fromCache=$fromCache")
+            if(failed){
+                binding.cvAdContainernative.visibility= View.GONE
+            }
+        }
+
+
+    }
     private fun setupStrokeBar() {
         binding.strokeBar.max = 150
         binding.strokeBar.progress = 20
@@ -242,7 +327,7 @@ class EditorActivity : BaseActivity() {
         )
     }
     private fun autoSelfie() {
-        ProgressUtils.show(this)
+        ProgressUtils.show(this, getString(R.string.auto_remove_is_processing))
         binding.drawView.beforeAutoSelfie()
         BackgroundRemover.process(
             binding.drawView.getBitmap()!!,
@@ -282,6 +367,7 @@ class EditorActivity : BaseActivity() {
         val inputStream = contentResolver.openInputStream(uri)
         val bitmap = BitmapFactory.decodeStream(inputStream)
         inputStream?.close()
+        ProgressUtils.beforebitmap=bitmap
         binding.drawView.setBitmap(bitmap)
     }
 }

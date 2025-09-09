@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
 
     android:orientation="vertical"
-    tools:context=".MainActivity">
+   >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -31,31 +31,15 @@
                 android:layout_width="wrap_content"
                 android:layout_centerVertical="true"
                 android:id="@+id/text"
+
                 android:fontFamily="@font/montserratsemibold"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:layout_toEndOf="@id/back"
-                android:layout_height="wrap_content"
-                android:text="@string/editor"/>
-            <ImageView
-                android:id="@+id/undo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-               android:layout_toStartOf="@id/redo"
-                android:layout_marginHorizontal="@dimen/_5sdp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/undo_selector" />
-
-            <ImageView
-                android:id="@+id/redo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_toStartOf="@id/done"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/redo_selector" />
+                android:layout_height="wrap_content"
+                android:text="@string/save1"/>
+
 
             <ImageView
                 android:id="@+id/done"
@@ -89,7 +73,32 @@
             android:visibility="visible"
             android:layout_height="match_parent" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:gravity="center"
+                android:layout_gravity="end|bottom"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/undoredoback"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/undo"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/undo"
+                    />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/redo"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/redo"
+                    />
 
+            </LinearLayout>
 
     </FrameLayout>
 
@@ -98,7 +107,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:id="@+id/menu"
-        android:layout_height="130dp">
+        android:layout_height="140dp">
         <LinearLayout
             android:id="@+id/colorlayout"
             android:layout_width="match_parent"
@@ -159,6 +168,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.3"
                 android:layout_gravity="center"
+                android:progressBackgroundTint="@color/grey1"
+                android:secondaryProgressTint="@color/grey1"
                 android:progressTint="@color/red"
                 android:thumbTint="@color/red"
                 android:max="30"
@@ -206,6 +217,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="@dimen/_3sdp"
                         android:text="@string/auto_removal"
+                        android:textColor="@color/grey1"
                        android:fontFamily="@font/montserratsemibold"
                         android:textSize="12sp"/>
                 </LinearLayout>
@@ -234,7 +246,7 @@
                         android:text="@string/manual"
                         android:fontFamily="@font/montserratsemibold"
                         android:layout_marginVertical="@dimen/_3sdp"
-
+                        android:textColor="@color/grey1"
                         android:textSize="12sp"/>
                 </LinearLayout>
 
@@ -244,6 +256,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     android:paddingVertical="@dimen/_5sdp"
                     android:gravity="center"
                     android:paddingHorizontal="12dp">
@@ -260,6 +273,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/crop"
+                        android:textColor="@color/grey1"
                         android:fontFamily="@font/montserratsemibold"
                         android:layout_marginVertical="@dimen/_3sdp"
 
@@ -288,6 +302,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/repair"
+                        android:textColor="@color/grey1"
                         android:fontFamily="@font/montserratsemibold"
                         android:layout_marginVertical="@dimen/_3sdp"
                         android:textSize="12sp"/>
@@ -315,6 +330,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/zoom"
+                        android:textColor="@color/grey1"
                         android:layout_marginVertical="@dimen/_3sdp"
                         android:fontFamily="@font/montserratsemibold"
                         android:textSize="12sp"/>
@@ -325,5 +341,89 @@
 
 
     </FrameLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/adlayout"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_ad_containerbanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="@dimen/_6sdp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/loading_layoutbanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/_1sdp">
+
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="@dimen/_1sdp"
+                    android:background="@color/lightgrey"
+                    android:gravity="center"
+                    android:text="@string/loading_ad_"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_ad_containernative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="@dimen/_6sdp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/loading_layoutnative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/_1sdp">
+
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="@dimen/_1sdp"
+                    android:background="@color/lightgrey"
+                    android:gravity="center"
+                    android:text="@string/loading_ad_"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+                <include
+                    layout="@layout/native_small_inline"
+                    android:visibility="visible" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

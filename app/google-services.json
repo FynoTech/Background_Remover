@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "440276410517",
+    "project_id": "aibgeraser-a139f",
+    "storage_bucket": "aibgeraser-a139f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440276410517:android:b5fee8303d36e178343b9c",
+        "android_client_info": {
+          "package_name": "com.photo.editor.background.eraser.bgeraser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs2Xu_BKxjTHghi8n7oet95DRBGhrxwTo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

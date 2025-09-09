@@ -28,6 +28,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.graphics.drawable.toBitmap
+import com.example.background_remove.adsManager.Ads
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -164,7 +165,7 @@ fun ImageView.ResetGradientDrawableColors() {
 
     this.setImageDrawable(BitmapDrawable(resources, bitmap))
 }
-fun View.setSafeClickListener(activity: Context,interval: Long = 500, onSafeClick: (View) -> Unit) {
+fun View.setSafeClickListener(activity: Context,check:Boolean=false,type:String="",interval: Long = 500, onSafeClick: (View) -> Unit) {
     this.setOnClickListener { view ->
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastGlobalClickTime > interval) {
@@ -181,21 +182,29 @@ fun View.setSafeClickListener(activity: Context,interval: Long = 500, onSafeClic
                         .start()
                 }
                 .start()
-            onSafeClick(view)
-/*
 
-            try {
-                Ads.showInterstitialWithCounter(
-                    activity = activity as Activity, // or requireActivity() in Fragment
-                ) { loaded, failed, showed, dismissed ->
-                    if (dismissed || failed) {
-                        onSafeClick(view)
-                        Log.d("asdsadljk", "setSafeClickListener: click")
+            var check1=false
+            if (Ads.isNetworkAvailableWithoutPremium(activity)) {
+                try {
+                    Ads.showInterstitialWithCounter(
+                        activity = activity as Activity,check,type // or requireActivity() in Fragment
+                    ) { loaded, failed, showed, dismissed ->
+
+                        if (!check1) {
+                            Log.e("AdsManager", "⏰ Timeout interstitial$loaded ${showed} ($failed)")
+                            if (dismissed || failed) {
+                                onSafeClick(view)
+                                Log.e("AdsManager", "⏰ clicked")
+                            }
+                            check1=true
+                        }
                     }
+                } catch (e: Exception) {
+
                 }
-            } catch (e: Exception) {
-                Log.d("asdsadljk", "setSafeClickListener: $e")
-            }*/
+            } else {
+                onSafeClick(view)
+            }
         }
     }
 }

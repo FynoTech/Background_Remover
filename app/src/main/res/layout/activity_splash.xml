@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplashActivity">
+   >
 
     <ImageView
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/_15sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/adlayout"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="wrap_content"/>
 
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/adlayout"
         android:layout_marginBottom="25dp"
         android:textSize="14sp"
         android:id="@+id/text1"
@@ -59,18 +59,90 @@
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/adlayout"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/text1"
-        android:layout_marginBottom="15dp"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:fontFamily="@font/montserratmedium"
-        android:layout_height="wrap_content"
-        android:text="@string/animation"/>
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_ad_containerbanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="@dimen/_6sdp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/loading_layoutbanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/_1sdp">
+
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="@dimen/_1sdp"
+                    android:background="@color/lightgrey"
+                    android:gravity="center"
+                    android:text="@string/loading_ad_"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_ad_containernative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="@dimen/_6sdp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/loading_layoutnative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/_1sdp">
+
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="@dimen/_1sdp"
+                    android:background="@color/grey1"
+                    android:gravity="center"
+                    android:text="@string/loading_ad_"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+                <include
+                    layout="@layout/native_small_button_bottom"
+                    android:visibility="visible" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

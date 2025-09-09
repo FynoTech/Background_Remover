@@ -8,20 +8,21 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.widget.TextView
 import com.airbnb.lottie.LottieAnimationView
-import com.example.background_remove.R
+import com.photo.editor.background.eraser.bgeraser.R
 
 
 object ProgressUtils {
     var bitmap: Bitmap? = null
+    var beforebitmap: Bitmap? = null
     private var dialog: Dialog? = null
-    fun show(context: Context) {
+    fun show(context: Context,string: String) {
         if (dialog != null && dialog?.isShowing == true) return
 
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_progress, null)
 
         // Update message
         val tvMessage = view.findViewById<TextView>(R.id.tvSuccess)
-
+        tvMessage.text = string
 
         // Lottie animation
         val animationView = view.findViewById<LottieAnimationView>(R.id.animationView)

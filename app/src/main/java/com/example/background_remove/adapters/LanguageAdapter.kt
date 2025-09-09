@@ -11,9 +11,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.background_remove.R
+
 import com.example.background_remove.utils.LanguageModel
 import com.example.background_remove.utils.setSafeClickListener
+import com.photo.editor.background.eraser.bgeraser.R
 
 
 class LanguageAdapter(

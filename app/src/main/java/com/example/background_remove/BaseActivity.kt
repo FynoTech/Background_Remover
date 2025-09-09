@@ -7,6 +7,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.background_remove.adsManager.Ads
 
 import java.util.Locale
 
@@ -33,13 +34,13 @@ open class BaseActivity : AppCompatActivity() {
     }
     override fun onPause() {
         super.onPause()
-
+        Ads.setPaused(true,this)
 
     }
 
     override fun onResume() {
         super.onResume()
-
+        Ads.setPaused(false,this)
         WindowCompat.setDecorFitsSystemWindows(window, true)
         val wic = WindowInsetsControllerCompat(window, window.decorView)
         wic.isAppearanceLightStatusBars = true

@@ -13,5 +13,12 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="CropImageTheme" parent="Base.Theme.AppCompat">
+        <!-- Let content fit system windows -->
+
+        <item name="android:fitsSystemWindows">true</item>
+
+
+    </style>
 
 </resources>
