@@ -5,16 +5,16 @@
 	<string name="select">चुनना</string>
 	<string name="Choose_Language">भाषा चुनें</string>
 	<string name="apply">आवेदन करना</string>
-	<string name="remove_background">पृष्ठभूमि निकालें</string>
-	<string name="change_background">Ai पृष्ठभूमि निकालें</string>
-	<string name="remove_object">पृष्ठभूमि इरेज़र</string>
-	<string name="instantly_erase_distractions_and_highlight_your_subject">निकालें और पृष्ठभूमि को बदलें</string>
-	<string name="give_your_subject_a_fresh_new_look_in_seconds">एक नल स्वचालित पृष्ठभूमि रिमूवर</string>
-	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">ऑटो निकालें पृष्ठभूमि</string>
+	<string name="remove_background">पृष्ठभूमि मिटाएं</string>
+	<string name="change_background">ऐ इरेज़र पृष्ठभूमि</string>
+	<string name="remove_object">एआई पृष्ठभूमि इरेज़र</string>
+	<string name="instantly_erase_distractions_and_highlight_your_subject">पृष्ठभूमि निकालें और मिटाएं</string>
+	<string name="give_your_subject_a_fresh_new_look_in_seconds">एक नल स्वचालित पृष्ठभूमि इरेज़र</string>
+	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">ऑटो मिटा पृष्ठभूमि</string>
 	<string name="languages">बोली</string>
 	<string name="open">खुला</string>
 	<string name="share">शेयर करना</string>
-	<string name="background">पृष्ठभूमि इरेज़र</string>
+	<string name="background">एआई पृष्ठभूमि इरेज़र</string>
 	<string name="make_every_photo_perfect">हर फोटो को परफेक्ट करें</string>
 	<string name="animation">एनिमेशन</string>
 	<string name="version">संस्करण</string>
@@ -30,7 +30,6 @@
 	<string name="crop">काटना</string>
 	<string name="repair">मरम्मत</string>
 	<string name="zoom">ज़ूम</string>
-	<string name="terms">नियम एवं शर्तें</string>
 	<string name="background_color">पृष्ठभूमि का रंग</string>
 	<string name="size">आकार :</string>
 	<string name="quit">बाहर निकलें ऐप?</string>
@@ -68,8 +67,8 @@ without वॉटरमार्क</string>
 	<string name="premium">अधिमूल्य</string>
 	<string name="rate_app">एप्प का मूल्यांकन</string>
 	<string name="feedback">नियम व शर्त</string>
-	<string name="howto">का उपयोग कैसे करें</string>
-	<string name="create_like_a_pro">एक समर्थक की तरह बनाएँ</string>
+	<string name="howto">का उपयोग कैसे करें?</string>
+	<string name="create_like_a_pro">एक समर्थक की तरह बनाएं</string>
 	<string name="ad_free_experience">विज्ञापन से मुक्त</string>
 	<string name="faster_conversions">फास्ट कन्वर्ट</string>
 	<string name="seamless_and_smooth">चिकनी प्रवाह</string>
@@ -84,13 +83,20 @@ without वॉटरमार्क</string>
 	<string name="pick_a_membership_that_fits_you">एक सदस्यता चुनें जो आपको फिट बैठता है</string>
 	<string name="_75_off">75% की छूट</string>
 	<string name="pro">मुरझाना</string>
+	<string name="terms">नियम एवं शर्तें</string>
 	<string name="you_can_cancel_anytime_in_your_google_play_store_settings_n_subscriptions_renew_automatically_unless_canceled_at_least_n24_hours_before_the_renewal_date">आप अपनी Google Play Store Settings में कभी भी रद्द कर सकते हैं। 
- सदस्यता स्वचालित रूप से नवीनीकृत हो जाती है जब तक कि नवीकरण की तारीख से कम से कम 
-24 घंटे पहले रद्द नहीं किया जाता है।</string>
+ सदस्यता स्वचालित रूप से नवीकरण की तारीख से कम से कम 
+24 घंटे पहले जब तक रद्द न करें।</string>
 	<string name="download_quick_standard_quality">त्वरित मानक गुणवत्ता डाउनलोड करें</string>
 	<string name="watch">HD/4K में AD और SAVE देखें</string>
 	<string name="watch1">HD/4K में बचाने के लिए एक विज्ञापन देखें</string>
 	<string name="before">पहले</string>
 	<string name="after">बाद</string>
 	<string name="save1">बचाना</string>
+	<string name="this_app_contains_ads">इस ऐप में विज्ञापन हैं</string>
+	<string name="already_removed">पृष्ठभूमि पहले से ही मिटा दी गई है</string>
+	<string name="watchad">देखें विज्ञापन</string>
+	<string name="yealry">सालाना</string>
+	<string name="per_year">प्रति वर्ष</string>
+	<string name="already_purchased">पहले से ही खरीदा</string>
 </resources>

@@ -5,16 +5,16 @@
 	<string name="select">Wählen</string>
 	<string name="Choose_Language">Wählen Sie Sprache</string>
 	<string name="apply">Anwenden</string>
-	<string name="remove_background">Hintergrund entfernen</string>
-	<string name="change_background">KI Hintergrund entfernen</string>
-	<string name="remove_object">Hintergrundgummi</string>
-	<string name="instantly_erase_distractions_and_highlight_your_subject">Hintergrund entfernen und ersetzen</string>
-	<string name="give_your_subject_a_fresh_new_look_in_seconds">Ein automatischer Hintergrundentferner tippen</string>
-	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Automatisch Hintergrund entfernen</string>
+	<string name="remove_background">Hintergrund löschen</string>
+	<string name="change_background">KI -Radiergummi Hintergrund</string>
+	<string name="remove_object">KI -Hintergrundgummi</string>
+	<string name="instantly_erase_distractions_and_highlight_your_subject">Hintergrund entfernen und löschen</string>
+	<string name="give_your_subject_a_fresh_new_look_in_seconds">Man tippen automatisch Hintergrundgummi Eraser</string>
+	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Automatischer Hintergrund</string>
 	<string name="languages">Sprachen</string>
 	<string name="open">Offen</string>
 	<string name="share">Aktie</string>
-	<string name="background">Hintergrundgummi</string>
+	<string name="background">KI -Hintergrundgummi</string>
 	<string name="make_every_photo_perfect">Machen Sie jedes Foto perfekt</string>
 	<string name="animation">Animation</string>
 	<string name="version">Version</string>
@@ -30,7 +30,6 @@
 	<string name="crop">Ernte</string>
 	<string name="repair">Reparieren</string>
 	<string name="zoom">Zoom</string>
-	<string name="terms">Allgemeine Geschäftsbedingungen</string>
 	<string name="background_color">Hintergrundfarbe</string>
 	<string name="size">Größe :</string>
 	<string name="quit">App beenden?</string>
@@ -67,7 +66,7 @@ wi -out Wasserzeichen</string>
 	<string name="premium">Prämie</string>
 	<string name="rate_app">Rate App</string>
 	<string name="feedback">Bedingungen &amp; Zustand</string>
-	<string name="howto">Wie man benutzt</string>
+	<string name="howto">Wie benutze ich?</string>
 	<string name="create_like_a_pro">Erstellen Sie wie ein Profi</string>
 	<string name="ad_free_experience">Ad-frei</string>
 	<string name="faster_conversions">Schneller Konvertiten</string>
@@ -83,6 +82,7 @@ wi -out Wasserzeichen</string>
 	<string name="pick_a_membership_that_fits_you">Wählen Sie eine Mitgliedschaft, die zu Ihnen passt</string>
 	<string name="_75_off">75% Rabatt</string>
 	<string name="pro">Pro</string>
+	<string name="terms">Allgemeine Geschäftsbedingungen</string>
 	<string name="you_can_cancel_anytime_in_your_google_play_store_settings_n_subscriptions_renew_automatically_unless_canceled_at_least_n24_hours_before_the_renewal_date">Sie können jederzeit in Ihren Google Play Store -Einstellungen stornieren. \ N Abonnements erneuern automatisch, sofern mindestens \ N24 Stunden vor dem Erneuerungsdatum storniert wird.</string>
 	<string name="download_quick_standard_quality">Laden Sie die schnelle Standardqualität herunter</string>
 	<string name="watch">Sehen Sie sich Anzeige an und speichern Sie in HD/4K</string>
@@ -90,4 +90,10 @@ wi -out Wasserzeichen</string>
 	<string name="before">Vor</string>
 	<string name="after">Nach</string>
 	<string name="save1">Speichern</string>
+	<string name="this_app_contains_ads">Diese App enthält Anzeigen</string>
+	<string name="already_removed">Hintergrund bereits gelöscht</string>
+	<string name="watchad">AD AD ansehen</string>
+	<string name="yealry">Jährlich</string>
+	<string name="per_year">Pro Jahr</string>
+	<string name="already_purchased">Bereits gekauft</string>
 </resources>

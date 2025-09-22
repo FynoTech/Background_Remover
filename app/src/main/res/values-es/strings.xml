@@ -5,16 +5,16 @@
 	<string name="select">Seleccionar</string>
 	<string name="Choose_Language">Elige el lenguaje</string>
 	<string name="apply">Aplicar</string>
-	<string name="remove_background">Eliminar fondo</string>
-	<string name="change_background">AI eliminar el fondo</string>
-	<string name="remove_object">Borrador de fondo</string>
-	<string name="instantly_erase_distractions_and_highlight_your_subject">Retire y reemplace el fondo</string>
-	<string name="give_your_subject_a_fresh_new_look_in_seconds">Un removedor automático de fondo automático</string>
-	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Auto Eliminar fondo</string>
+	<string name="remove_background">Borrar antecedentes</string>
+	<string name="change_background">Antecedentes de borrador de IA</string>
+	<string name="remove_object">Brote de fondo de IA</string>
+	<string name="instantly_erase_distractions_and_highlight_your_subject">Eliminar y borrar los antecedentes</string>
+	<string name="give_your_subject_a_fresh_new_look_in_seconds">Un borrador de fondo automático de un toque</string>
+	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Antecedentes de borrado automático</string>
 	<string name="languages">Lenguas</string>
 	<string name="open">Abierto</string>
 	<string name="share">Compartir</string>
-	<string name="background">Borrador de fondo</string>
+	<string name="background">Brote de fondo de IA</string>
 	<string name="make_every_photo_perfect">Haz que cada foto sea perfecta</string>
 	<string name="animation">Animación</string>
 	<string name="version">Versión</string>
@@ -30,7 +30,6 @@
 	<string name="crop">Cultivo</string>
 	<string name="repair">Reparar</string>
 	<string name="zoom">Zoom</string>
-	<string name="terms">Términos y condiciones</string>
 	<string name="background_color">Color de fondo</string>
 	<string name="size">Tamaño :</string>
 	<string name="quit">Aplicación de salida?</string>
@@ -67,7 +66,7 @@ rate.</string>
 	<string name="premium">De primera calidad</string>
 	<string name="rate_app">Aplicación de calificación</string>
 	<string name="feedback">Términos y condición</string>
-	<string name="howto">Cómo usar</string>
+	<string name="howto">¿Cómo usar?</string>
 	<string name="create_like_a_pro">Crear como un profesional</string>
 	<string name="ad_free_experience">Sin publicidad</string>
 	<string name="faster_conversions">Convertir rápido</string>
@@ -83,6 +82,7 @@ rate.</string>
 	<string name="pick_a_membership_that_fits_you">Elija una membresía que le quede bien</string>
 	<string name="_75_off">75% de descuento</string>
 	<string name="pro">Pro</string>
+	<string name="terms">Términos y condiciones</string>
 	<string name="you_can_cancel_anytime_in_your_google_play_store_settings_n_subscriptions_renew_automatically_unless_canceled_at_least_n24_hours_before_the_renewal_date">Puede cancelar en cualquier momento en la configuración de Google Play Store. Las suscripciones se renuevan automáticamente a menos que se cancele al menos 
 24 horas antes de la fecha de renovación.</string>
 	<string name="download_quick_standard_quality">Descargar la calidad estándar rápida</string>
@@ -91,4 +91,10 @@ rate.</string>
 	<string name="before">Antes</string>
 	<string name="after">Después</string>
 	<string name="save1">Ahorrar</string>
+	<string name="this_app_contains_ads">Esta aplicación contiene anuncios</string>
+	<string name="already_removed">Antecedentes ya borrado</string>
+	<string name="watchad">Mira AD</string>
+	<string name="yealry">Anual</string>
+	<string name="per_year">Por año</string>
+	<string name="already_purchased">Ya comprado</string>
 </resources>

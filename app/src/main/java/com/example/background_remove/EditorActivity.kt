@@ -119,11 +119,11 @@ class EditorActivity : BaseActivity() {
             if (!RemoteConfigManager.isRewardedAutoAdEnabled()) {
                 if (!autocheck) {
                     autoSelfie()
+
+                } else {
                     binding.manualClearSettingsLayout.visibility = android.view.View.GONE
                     binding.colorlayout.visibility = android.view.View.VISIBLE
                     selectItem(binding.layoutAutoRemoval)
-                } else {
-
                     Toast.makeText(this, getString(R.string.already_removed), Toast.LENGTH_SHORT).show()
                 }
             } else {
@@ -141,10 +141,11 @@ class EditorActivity : BaseActivity() {
                             ProgressUtils.dismiss()
                             if (!autocheck) {
                                 autoSelfie()
+
+                            } else {
                                 binding.manualClearSettingsLayout.visibility = android.view.View.GONE
                                 binding.colorlayout.visibility = android.view.View.VISIBLE
                                 selectItem(binding.layoutAutoRemoval)
-                            } else {
                                 Toast.makeText(this, getString(R.string.already_removed), Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -155,10 +156,11 @@ class EditorActivity : BaseActivity() {
                         dismissed -> {
                             if (!autocheck) {
                                 autoSelfie()
+
+                            } else {
                                 binding.manualClearSettingsLayout.visibility = android.view.View.GONE
                                 binding.colorlayout.visibility = android.view.View.VISIBLE
                                 selectItem(binding.layoutAutoRemoval)
-                            } else {
                                 Toast.makeText(this, getString(R.string.already_removed), Toast.LENGTH_SHORT).show()
                             }
                         }

@@ -43,6 +43,7 @@ class MyApp : Application(), Application.ActivityLifecycleCallbacks,
 
     companion object {
         private const val LOG_TAG = "AppOpenAdManager"
+        var isShowingrecently = false
 
     }
     override fun onCreate(){
@@ -276,6 +277,7 @@ class MyApp : Application(), Application.ActivityLifecycleCallbacks,
                     appOpenAd = null
                     Dialogs.dismissProgressDialogloading()
                     isShowingAd = false
+                    isShowingrecently=true
                     Ads.acitvitycountcheck = 0
                     Log.d(LOG_TAG, "onAdDismissedFullScreenContent.")
                     onShowAdCompleteListener.onShowAdComplete()

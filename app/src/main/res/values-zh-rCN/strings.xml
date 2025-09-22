@@ -5,16 +5,16 @@
 	<string name="select">选择</string>
 	<string name="Choose_Language">选择语言</string>
 	<string name="apply">申请</string>
-	<string name="remove_background">删除背景</string>
-	<string name="change_background">AI删除背景</string>
-	<string name="remove_object">背景橡皮擦</string>
-	<string name="instantly_erase_distractions_and_highlight_your_subject">删除并更换背景</string>
-	<string name="give_your_subject_a_fresh_new_look_in_seconds">一台自动背景拆卸剂</string>
-	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">自动删除背景</string>
+	<string name="remove_background">擦除背景</string>
+	<string name="change_background">AI擦除背景</string>
+	<string name="remove_object">AI背景橡皮擦</string>
+	<string name="instantly_erase_distractions_and_highlight_your_subject">删除和擦除背景</string>
+	<string name="give_your_subject_a_fresh_new_look_in_seconds">一台自动背景橡胶</string>
+	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">自动擦除背景</string>
 	<string name="languages">语言</string>
 	<string name="open">打开</string>
 	<string name="share">分享</string>
-	<string name="background">背景橡皮擦</string>
+	<string name="background">AI背景橡皮擦</string>
 	<string name="make_every_photo_perfect">使每张照片完美</string>
 	<string name="animation">动画片</string>
 	<string name="version">版本</string>
@@ -30,7 +30,6 @@
 	<string name="crop">庄稼</string>
 	<string name="repair">维修</string>
 	<string name="zoom">飞涨</string>
-	<string name="terms">条款和条件</string>
 	<string name="background_color">背景颜色</string>
 	<string name="size">尺寸 ：</string>
 	<string name="quit">退出应用？</string>
@@ -68,7 +67,7 @@ withOut Watermark</string>
 	<string name="premium">优质的</string>
 	<string name="rate_app">费率应用程序</string>
 	<string name="feedback">条款和条件</string>
-	<string name="howto">如何使用</string>
+	<string name="howto">如何使用？</string>
 	<string name="create_like_a_pro">像专业人士一样创建</string>
 	<string name="ad_free_experience">无广告</string>
 	<string name="faster_conversions">快速转换</string>
@@ -84,6 +83,7 @@ withOut Watermark</string>
 	<string name="pick_a_membership_that_fits_you">选择适合您的会员资格</string>
 	<string name="_75_off">75％的折扣</string>
 	<string name="pro">Pro</string>
+	<string name="terms">条款和条件</string>
 	<string name="you_can_cancel_anytime_in_your_google_play_store_settings_n_subscriptions_renew_automatically_unless_canceled_at_least_n24_hours_before_the_renewal_date">您可以在Google Play商店设置中随时取消。</string>
 	<string name="download_quick_standard_quality">下载快速标准质量</string>
 	<string name="watch">观看广告并保存高清/4K</string>
@@ -91,4 +91,10 @@ withOut Watermark</string>
 	<string name="before">前</string>
 	<string name="after">后</string>
 	<string name="save1">节省</string>
+	<string name="this_app_contains_ads">该应用包含广告</string>
+	<string name="already_removed">背景已经删除</string>
+	<string name="watchad">观看广告</string>
+	<string name="yealry">每年</string>
+	<string name="per_year">每年</string>
+	<string name="already_purchased">已经购买了</string>
 </resources>

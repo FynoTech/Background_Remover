@@ -33,6 +33,7 @@
         </provider>
         <activity
             android:name="com.example.background_remove.EditorActivity"
+
             android:exported="false" />
         <activity
             android:name="com.example.background_remove.SettingsActivity"

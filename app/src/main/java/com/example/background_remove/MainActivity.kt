@@ -88,7 +88,8 @@ class MainActivity : BaseActivity() {
             } else if (storageGranted) {
                 pickImageLauncher.launch(arrayOf("image/*"))
             } else {
-                Toast.makeText(this, "Permissions are required to continue", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,
+                    getString(R.string.permissions_are_required_to_continue), Toast.LENGTH_SHORT).show()
             }
         }
     @SuppressLint("ClickableViewAccessibility")

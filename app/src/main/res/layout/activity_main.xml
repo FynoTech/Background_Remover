@@ -104,9 +104,10 @@
     <FrameLayout
         android:id="@+id/comparisonLayout"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/_5sdp"
         app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintDimensionRatio="500:338"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -115,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
-            android:src="@drawable/image" />
+            android:src="@drawable/imagepic2" />
 
         <ImageView
             android:id="@+id/beforeImage"
@@ -164,8 +165,8 @@
             android:padding="8dp">
 
             <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:background="@drawable/circle_gradient"
                 android:padding="20dp"
                 android:src="@drawable/ic_gallery" />
@@ -191,8 +192,8 @@
             android:padding="8dp">
 
             <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:background="@drawable/circle_gradient"
                 android:padding="20dp"
                 android:src="@drawable/ic_camera" />

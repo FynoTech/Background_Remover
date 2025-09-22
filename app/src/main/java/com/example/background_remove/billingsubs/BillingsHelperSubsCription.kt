@@ -8,6 +8,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
@@ -21,11 +22,13 @@ import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryPurchasesParams
 import com.example.background_remove.adsManager.Ads
-
+import com.example.background_remove.adsManager.SharedPreferenceUtils.save
 import com.example.background_remove.billing.OnUpdatePremiumListener
 import com.example.background_remove.billing.Security
 import com.example.background_remove.utils.PrefsManagerRemoteConfig
 import com.photo.editor.background.eraser.bgeraser.R
+
+
 import java.io.IOException
 import java.lang.ref.WeakReference
 
@@ -41,7 +44,7 @@ class BillingsHelperSubsCription private constructor(activity: AppCompatActivity
         var billingClient: BillingClient? = null
         var price: String? = null
         var selectedProductId: String? = null
-        val productIds = listOf(Ads.weeklykey, Ads.monthlykey)
+        val productIds = listOf( Ads.monthlykey,Ads.yearlykey,Ads.weeklykey,)
 
         @Synchronized
         fun getInstance(activity: AppCompatActivity): BillingsHelperSubsCription {
@@ -177,6 +180,14 @@ class BillingsHelperSubsCription private constructor(activity: AppCompatActivity
                             }
                             Log.d(TAG, "Monthly subscription active: ${purchase.products}")
                         }
+                        purchase.products.contains(Ads.yearlykey) -> {
+                            currentPurchase = purchase
+                            PrefsManagerRemoteConfig.with(activityContext).apply {
+                                save(Ads.KEY_IS_PURCHASEDSubs, true)
+                                save(Ads.purchasedsubs, "yearly")
+                            }
+                            Log.d(TAG, "Yearly subscription active: ${purchase.products}")
+                        }
                         else -> {
                             Log.d(TAG, "Other subscription active: ${purchase.products}")
                         }
@@ -195,10 +206,12 @@ class BillingsHelperSubsCription private constructor(activity: AppCompatActivity
 
     private val productDetailsResponseListener = ProductDetailsResponseListener { billingResult, productDetailsList ->
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            Log.d(TAG, "Product ID: size ${productDetailsList.size}")
             productDetailsList.forEach { productDetails ->
+                Log.d(TAG, "Product ID: ${productDetails.productId}")
                 if (productIds.contains(productDetails.productId)) {
                     val keyPrice = if (productDetails.productId == Ads.monthlykey)
-                        Ads.monthlykey else Ads.weeklykey
+                        Ads.monthlykey else if (productDetails.productId == Ads.weeklykey) Ads.weeklykey else Ads.yearlykey
 
                     subscriptionSkuDetails = productDetails
 
@@ -273,6 +286,12 @@ class BillingsHelperSubsCription private constructor(activity: AppCompatActivity
                 PrefsManagerRemoteConfig.with(context).apply {
                     save(Ads.KEY_IS_PURCHASEDSubs, true)
                     save(Ads.purchasedsubs, "monthly")
+                }
+            }
+            purchase.products.contains(Ads.yearlykey) -> {
+                PrefsManagerRemoteConfig.with(context).apply {
+                    save(Ads.KEY_IS_PURCHASEDSubs, true)
+                    save(Ads.purchasedsubs, "yearly")
                 }
             }
             else -> {

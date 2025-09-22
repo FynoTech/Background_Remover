@@ -56,7 +56,14 @@ class NativeAdFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        if(RemoteConfigManager.isOnboardingNativeFull1Enabled()){
+            loadnative1()
+        }
 
+
+        if(RemoteConfigManager.isOnboardingNativeFull2Enabled()){
+            loadnative2()
+        }
 
     }
 

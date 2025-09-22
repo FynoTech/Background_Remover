@@ -10,6 +10,7 @@ import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.ProductDetailsResponseListener
@@ -166,8 +167,8 @@ class BillingsHelper private constructor(activity: AppCompatActivity) : BillingC
 
                                 Log.d(TAG, "Product details response3: lifetime")
                                 lifeTimeSkuDetails=productDetails
+                        Log.d("abcd", lifeTimeSkuDetails?.name + " " + lifeTimeSkuDetails?.productId + " " + lifeTimeSkuDetails?.productType)
                                 val price = productDetails.oneTimePurchaseOfferDetails?.formattedPrice
-                        Log.d("abcd12312",price.toString())
                                 price?.let {
                                     PrefsManagerRemoteConfig.with(activityContext)
                                         .save(Ads.lifetimekey, it)

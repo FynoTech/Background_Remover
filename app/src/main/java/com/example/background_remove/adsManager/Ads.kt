@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.example.background_remove.MyApp
 import com.example.background_remove.utils.PrefsManagerRemoteConfig
 import com.example.background_remove.utils.ProgressUtils
 import com.example.background_remove.utils.RemoteConfigManager
@@ -36,6 +37,7 @@ object Ads {
      const val lifetimekey = "lifetime_subscription"
      const val weeklykey = "weekly_subscription"
      const val monthlykey = "monthly_subscription"
+     const val yearlykey = "yearly_subscription"
      const val KEY_IS_PURCHASEDSubs = "is_purchased_subs"
      const val  purchasedsubs = "subscription_type"
     var license_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5CFur6ApkwmL44RVQuyepPlpzvQ6iI+fC6Uf41iSyotQdbZmyC48Hhdik0TxrupltiLFhMF+Im/ze6Qb7smnMv26PQwDFnRFEVe0ek5jZhPDEAWW07MKcZNxtWomGNRjem4VkhEVnFGN70yctZBbT9sr6JboeyPrg3avwdiD68fxHvsY3aNPM1n9d54muNlcd+q4i2p9rVF/5fDfLU5KvurtngPOSeZi+kt6f18wT+KBO7SEE1VkCrQzGCBrTPN7/PAHUAEwnvLx6zuRUrMRubQYMKzm4U3XKJvoweeF6swa6Y2kwdWmdX01yEGuwjGNqB/2CRhOrlcb/4/4ggUc4wIDAQAB"
@@ -152,6 +154,11 @@ object Ads {
     ) {
         if (!isNetworkAvailableWithoutPremium(activity)) {
             callback?.invoke(false, true, false, false)
+            return
+        }
+        if(MyApp.isShowingrecently){
+            callback?.invoke(false, true, false, false)
+            MyApp.isShowingrecently=false
             return
         }
         isinterstitialvisible =true
@@ -341,7 +348,11 @@ object Ads {
             callback?.invoke(false, true, false, false, false)
             return
         }
-
+        if(MyApp.isShowingrecently){
+            callback?.invoke(false, true, false, false, false)
+            MyApp.isShowingrecently=false
+            return
+        }
         // ✅ Already loaded → show immediately
         rewardedAd?.let { ad ->
             ad.setImmersiveMode(true)

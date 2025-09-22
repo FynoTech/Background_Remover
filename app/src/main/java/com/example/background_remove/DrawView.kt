@@ -3,11 +3,13 @@ package com.example.background_remove
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.ImageView
+import com.example.background_remove.adsManager.Ads
 import kotlin.math.abs
 import java.util.*
 
@@ -35,7 +37,7 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
         strokeWidth = 60f
         xfermode = null
     }
-
+    var onsizechange=false
     private val previewPaint = Paint().apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
@@ -194,11 +196,20 @@ class DrawView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     // --- Override ---
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+
+        if (onsizechange) {
+            bitmapOffsetX = ((w - (workingBitmap?.width ?: 0)) / 2f).coerceAtLeast(0f)
+            bitmapOffsetY = ((h - (workingBitmap?.height ?: 0)) / 2f).coerceAtLeast(0f)
+            Log.d("abcd", "onSizeChanged ignored")
+            return
+        }
+        Log.d("abcd", "onSizeChanged: ")
         savedImageBitmap?.let {
             savedImageBitmapScaled = scaleBitmapToFitView(it, w, h)
             workingBitmap = savedImageBitmapScaled?.copy(Bitmap.Config.ARGB_8888, true)
             bufferCanvas = Canvas(workingBitmap!!)
             clearHistory()
+            onsizechange=true
             invalidate()
         }
     }

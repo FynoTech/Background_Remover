@@ -5,16 +5,16 @@
 	<string name="select">يختار</string>
 	<string name="Choose_Language">اختر اللغة</string>
 	<string name="apply">يتقدم</string>
-	<string name="remove_background">إزالة الخلفية</string>
-	<string name="change_background">AI إزالة الخلفية</string>
-	<string name="remove_object">ممحاة الخلفية</string>
-	<string name="instantly_erase_distractions_and_highlight_your_subject">إزالة واستبدال الخلفية</string>
-	<string name="give_your_subject_a_fresh_new_look_in_seconds">انقر واحد مزيل الخلفية التلقائي</string>
-	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">تلقائي إزالة الخلفية</string>
+	<string name="remove_background">تمحو الخلفية</string>
+	<string name="change_background">خلفية ممحاة الذكاء الاصطناعي</string>
+	<string name="remove_object">مححرة خلفية الذكاء الاصطناعي</string>
+	<string name="instantly_erase_distractions_and_highlight_your_subject">إزالة الخلفية ومحوها</string>
+	<string name="give_your_subject_a_fresh_new_look_in_seconds">ممر خلفية تلقائي واحد النقر</string>
+	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">خلفية محو السيارات</string>
 	<string name="languages">اللغات</string>
 	<string name="open">يفتح</string>
 	<string name="share">يشارك</string>
-	<string name="background">ممحاة الخلفية</string>
+	<string name="background">مححرة خلفية الذكاء الاصطناعي</string>
 	<string name="make_every_photo_perfect">اجعل كل صورة مثالية</string>
 	<string name="animation">الرسوم المتحركة</string>
 	<string name="version">إصدار</string>
@@ -30,7 +30,6 @@
 	<string name="crop">اقتصاص</string>
 	<string name="repair">بصلح</string>
 	<string name="zoom">تكبير</string>
-	<string name="terms">الشروط والأحكام</string>
 	<string name="background_color">لون الخلفية</string>
 	<string name="size">مقاس :</string>
 	<string name="quit">تطبيق الخروج؟</string>
@@ -69,7 +68,7 @@ without العلامة المائية</string>
 	<string name="premium">غالي</string>
 	<string name="rate_app">قيم التطبيق</string>
 	<string name="feedback">الشروط والشرط</string>
-	<string name="howto">كيفية استخدام</string>
+	<string name="howto">كيف تستخدم؟</string>
 	<string name="create_like_a_pro">خلق مثل المحترف</string>
 	<string name="ad_free_experience">خالية من الإعلان</string>
 	<string name="faster_conversions">تحويل سريع</string>
@@ -85,6 +84,7 @@ without العلامة المائية</string>
 	<string name="pick_a_membership_that_fits_you">اختر عضوية تناسبك</string>
 	<string name="_75_off">75 ٪ خصم</string>
 	<string name="pro">المحترف</string>
+	<string name="terms">الشروط والأحكام</string>
 	<string name="you_can_cancel_anytime_in_your_google_play_store_settings_n_subscriptions_renew_automatically_unless_canceled_at_least_n24_hours_before_the_renewal_date">يمكنك الإلغاء في أي وقت في إعدادات متجر Google Play.</string>
 	<string name="download_quick_standard_quality">قم بتنزيل جودة قياسية سريعة</string>
 	<string name="watch">شاهد الإعلان وحفظه في HD/4K</string>
@@ -92,4 +92,10 @@ without العلامة المائية</string>
 	<string name="before">قبل</string>
 	<string name="after">بعد</string>
 	<string name="save1">يحفظ</string>
+	<string name="this_app_contains_ads">يحتوي هذا التطبيق على إعلانات</string>
+	<string name="already_removed">خلفية تمحى بالفعل</string>
+	<string name="watchad">مشاهدة الإعلان</string>
+	<string name="yealry">سنوي</string>
+	<string name="per_year">كل سنة</string>
+	<string name="already_purchased">تم شراؤها بالفعل</string>
 </resources>

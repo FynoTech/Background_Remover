@@ -5,16 +5,16 @@
 	<string name="select">Выбирать</string>
 	<string name="Choose_Language">Выберите язык</string>
 	<string name="apply">Применять</string>
-	<string name="remove_background">Удалить фон</string>
-	<string name="change_background">AI Удалить фон</string>
-	<string name="remove_object">Фоновый ластик</string>
-	<string name="instantly_erase_distractions_and_highlight_your_subject">Удалить и заменить фон</string>
-	<string name="give_your_subject_a_fresh_new_look_in_seconds">Один автоматический снятие фона нажатия</string>
-	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Автоматическое удаление фона</string>
+	<string name="remove_background">Стежьте фон</string>
+	<string name="change_background">Ай -ластик</string>
+	<string name="remove_object">ИИ фоновый ластик</string>
+	<string name="instantly_erase_distractions_and_highlight_your_subject">Удалить и стереть фон</string>
+	<string name="give_your_subject_a_fresh_new_look_in_seconds">Один поток автоматического фонового ластика</string>
+	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Автоматочный фон</string>
 	<string name="languages">Языки</string>
 	<string name="open">Открыть</string>
 	<string name="share">Делиться</string>
-	<string name="background">Фоновый ластик</string>
+	<string name="background">ИИ фоновый ластик</string>
 	<string name="make_every_photo_perfect">Сделайте каждую фотографию идеальным</string>
 	<string name="animation">Анимация</string>
 	<string name="version">Версия</string>
@@ -30,7 +30,6 @@
 	<string name="crop">Обрезать</string>
 	<string name="repair">Ремонт</string>
 	<string name="zoom">Зум</string>
-	<string name="terms">Условия и условия</string>
 	<string name="background_color">Цвет фона</string>
 	<string name="size">Размер :</string>
 	<string name="quit">Приложение для выхода?</string>
@@ -67,7 +66,7 @@ without watermark</string>
 	<string name="premium">Премиум</string>
 	<string name="rate_app">Оценка приложения</string>
 	<string name="feedback">Условия и условия</string>
-	<string name="howto">Как использовать</string>
+	<string name="howto">Как использовать?</string>
 	<string name="create_like_a_pro">Создать как профессионал</string>
 	<string name="ad_free_experience">Без рекламы</string>
 	<string name="faster_conversions">Быстро конвертируется</string>
@@ -83,6 +82,7 @@ without watermark</string>
 	<string name="pick_a_membership_that_fits_you">Выберите членство, которое подходит вам</string>
 	<string name="_75_off">75% скидка</string>
 	<string name="pro">Профиль</string>
+	<string name="terms">Условия и условия</string>
 	<string name="you_can_cancel_anytime_in_your_google_play_store_settings_n_subscriptions_renew_automatically_unless_canceled_at_least_n24_hours_before_the_renewal_date">Вы можете отменить в любое время в настройках Google Play Store. \ N Подписки об продлении автоматически, если не отменить не менее 24 часов до даты продления.</string>
 	<string name="download_quick_standard_quality">Скачать быстрое стандартное качество</string>
 	<string name="watch">Смотреть AD &amp; Save в HD/4K</string>
@@ -90,4 +90,10 @@ without watermark</string>
 	<string name="before">До</string>
 	<string name="after">После</string>
 	<string name="save1">Сохранять</string>
+	<string name="this_app_contains_ads">Это приложение содержит рекламу</string>
+	<string name="already_removed">Фон уже стерто</string>
+	<string name="watchad">Смотреть рекламу</string>
+	<string name="yealry">Ежегодно</string>
+	<string name="per_year">В год</string>
+	<string name="already_purchased">Уже куплен</string>
 </resources>

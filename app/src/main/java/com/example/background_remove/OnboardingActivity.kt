@@ -130,9 +130,11 @@ class OnboardingActivity : BaseActivity() {
                     }
                 }
                 if (page is OnboardingPage.NativeAdPage) {
-                    binding.cvAdContainernative.visibility = View.INVISIBLE
-                    binding.cvAdContainerbanner.visibility = View.INVISIBLE
+                    binding.cvAdContainernative.visibility = View.GONE
+                    binding.cvAdContainerbanner.visibility = View.GONE
+                    binding.layout.visibility = View.GONE
                 } else {
+                    binding.layout.visibility = View.VISIBLE
                     if (Ads.isNetworkAvailableWithoutPremium(this@OnboardingActivity)) {
                         if (RemoteConfigManager.isOnboardingBannerEnabled()) {
                             binding.cvAdContainerbanner.visibility=View.VISIBLE

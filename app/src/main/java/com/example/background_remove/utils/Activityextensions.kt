@@ -41,7 +41,7 @@ import kotlin.math.abs
 fun Activity.setupStatusBar(window: Window, black: Int) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) { // Android 15+
         window.decorView.setOnApplyWindowInsetsListener { view, insets ->
-            val systemBars = insets.getInsets(WindowInsets.Type.statusBars())
+            val systemBars = insets.getInsets(WindowInsets.Type.systemBars())
             view.setBackgroundColor(Color.WHITE)
 
             // Adjust padding to avoid overlap
@@ -190,14 +190,14 @@ fun View.setSafeClickListener(activity: Context,check:Boolean=false,type:String=
                         activity = activity as Activity,check,type // or requireActivity() in Fragment
                     ) { loaded, failed, showed, dismissed ->
 
-                        if (!check1) {
+
                             Log.e("AdsManager", "⏰ Timeout interstitial$loaded ${showed} ($failed)")
                             if (dismissed || failed) {
                                 onSafeClick(view)
                                 Log.e("AdsManager", "⏰ clicked")
                             }
                             check1=true
-                        }
+
                     }
                 } catch (e: Exception) {
 

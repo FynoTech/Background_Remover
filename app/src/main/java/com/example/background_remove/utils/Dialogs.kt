@@ -56,13 +56,13 @@ object Dialogs {
         val btnOk = dialog.findViewById<Button>(R.id.btnOk)
 
         // Clicks
-        btnCancel.setSafeClickListener(context) {
+        btnCancel.setSafeClickListenertools {
             dialog.dismiss()
             onCancel?.invoke()
         }
 
-        btnOk.setSafeClickListener(context) {
-            dialog.dismiss()
+        btnOk.setSafeClickListenertools {
+        dialog.dismiss()
             onConfirm()
         }
         val width = (context.resources.displayMetrics.widthPixels * 0.80).toInt()

@@ -5,16 +5,16 @@
 	<string name="select">Selecione</string>
 	<string name="Choose_Language">Escolha o idioma</string>
 	<string name="apply">Aplicar</string>
-	<string name="remove_background">Remova o fundo</string>
-	<string name="change_background">Ai remove o fundo</string>
-	<string name="remove_object">A borracha de fundo</string>
-	<string name="instantly_erase_distractions_and_highlight_your_subject">Remova e substitua o fundo</string>
-	<string name="give_your_subject_a_fresh_new_look_in_seconds">Removedor de fundo automático de um toque</string>
-	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Remover automaticamente o fundo</string>
+	<string name="remove_background">Apagar o fundo</string>
+	<string name="change_background">Apreciação da AI</string>
+	<string name="remove_object">Apora de fundo da IA</string>
+	<string name="instantly_erase_distractions_and_highlight_your_subject">Remova e apagar o fundo</string>
+	<string name="give_your_subject_a_fresh_new_look_in_seconds">Uma borracha de fundo automática de uma torneira</string>
+	<string name="erase_unwanted_elements_and_keep_the_focus_on_your_subject">Apagação automática de fundo</string>
 	<string name="languages">Idiomas</string>
 	<string name="open">Abrir</string>
 	<string name="share">Compartilhar</string>
-	<string name="background">A borracha de fundo</string>
+	<string name="background">Apora de fundo da IA</string>
 	<string name="make_every_photo_perfect">Torne cada foto perfeita</string>
 	<string name="animation">Animação</string>
 	<string name="version">Versão</string>
@@ -30,7 +30,6 @@
 	<string name="crop">Cortar</string>
 	<string name="repair">Reparar</string>
 	<string name="zoom">Zoom</string>
-	<string name="terms">Termos e Condições</string>
 	<string name="background_color">Cor de fundo</string>
 	<string name="size">Tamanho :</string>
 	<string name="quit">App de saída?</string>
@@ -66,7 +65,7 @@ better que gostaríamos de agradecer se você puder nos fazer.</string>
 	<string name="premium">Premium</string>
 	<string name="rate_app">App de taxa</string>
 	<string name="feedback">Termos e Condição</string>
-	<string name="howto">Como usar</string>
+	<string name="howto">Como usar?</string>
 	<string name="create_like_a_pro">Crie como um profissional</string>
 	<string name="ad_free_experience">Sem anúncios</string>
 	<string name="faster_conversions">Converter rápido</string>
@@ -82,6 +81,7 @@ better que gostaríamos de agradecer se você puder nos fazer.</string>
 	<string name="pick_a_membership_that_fits_you">Escolha uma associação que se encaixe</string>
 	<string name="_75_off">75% de desconto</string>
 	<string name="pro">Pró</string>
+	<string name="terms">Termos e Condições</string>
 	<string name="you_can_cancel_anytime_in_your_google_play_store_settings_n_subscriptions_renew_automatically_unless_canceled_at_least_n24_hours_before_the_renewal_date">Você pode cancelar a qualquer momento em suas configurações de loja do Google Play. \ N assinaturas Renovar automaticamente, a menos que seja cancelado pelo menos \ N24 horas antes da data de renovação.</string>
 	<string name="download_quick_standard_quality">Baixe a qualidade padrão rápido</string>
 	<string name="watch">Assista AD e Salvar em HD/4K</string>
@@ -89,4 +89,10 @@ better que gostaríamos de agradecer se você puder nos fazer.</string>
 	<string name="before">Antes</string>
 	<string name="after">Depois</string>
 	<string name="save1">Salvar</string>
+	<string name="this_app_contains_ads">Este aplicativo contém anúncios</string>
+	<string name="already_removed">Antecedentes já apagados</string>
+	<string name="watchad">Assista AD</string>
+	<string name="yealry">Anual</string>
+	<string name="per_year">Por ano</string>
+	<string name="already_purchased">Já comprado</string>
 </resources>

@@ -30,7 +30,7 @@
     <string name="crop">Crop</string>
     <string name="repair">Repair</string>
     <string name="zoom">Zoom</string>
-    <string name="terms"><![CDATA[Terms & Conditions]]></string>
+
     <string name="background_color">Background Color</string>
     <string name="size">Size :</string>
     <string name="quit">Exit App?</string>
@@ -81,6 +81,7 @@
     <string name="pick_a_membership_that_fits_you">Pick a membership that fits you</string>
     <string name="_75_off">75% OFF</string>
     <string name="pro">Pro</string>
+    <string name="terms"><![CDATA[Terms & Conditions]]></string>
     <string name="you_can_cancel_anytime_in_your_google_play_store_settings_n_subscriptions_renew_automatically_unless_canceled_at_least_n24_hours_before_the_renewal_date">You can cancel anytime in your Google Play Store settings.\n Subscriptions renew automatically unless canceled at least\n24 hours before the renewal date.</string>
     <string name="download_quick_standard_quality">Download quick standard quality</string>
     <string name="watch"><![CDATA[Watch Ad & Save in HD/4K]]></string>
@@ -91,4 +92,8 @@
     <string name="this_app_contains_ads">This App contains Ads</string>
     <string name="already_removed">Background Already Erased</string>
     <string name="watchad">Watch AD</string>
+    <string name="yealry">Yearly</string>
+    <string name="per_year">Per Year</string>
+    <string name="already_purchased">Already Purchased</string>
+    <string name="permissions_are_required_to_continue">Permissions are required to continue</string>
 </resources>

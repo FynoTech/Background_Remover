@@ -13,6 +13,7 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.VideoController
 import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
@@ -145,37 +146,72 @@ object NativeAdManager {
      */
     private fun populateNativeAd(nativeAd: NativeAd, adView: NativeAdView) {
         try {
-            adView.mediaView = adView.findViewById(R.id.ad_media) as? MediaView
+            adView.mediaView = adView.findViewById(R.id.ad_media)
+            adView.headlineView = adView.findViewById(R.id.ad_headline)
             adView.bodyView = adView.findViewById(R.id.ad_body)
             adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
-            adView.iconView = adView.findViewById(R.id.icon)
-            adView.starRatingView = adView.findViewById(R.id.ad_stars)
+            adView.iconView = adView.findViewById(R.id.ad_app_icon)
+            adView.priceView = adView.findViewById(R.id.ad_price)
+            adView.storeView = adView.findViewById(R.id.ad_store)
+            adView.advertiserView = adView.findViewById(R.id.ad_advertiser)
 
-            val adHeadline: TextView = adView.findViewById(R.id.ad_headline)
-            adHeadline.text = nativeAd.headline
+            (adView.headlineView as TextView).text = nativeAd.headline
+            adView.mediaView?.mediaContent = nativeAd.mediaContent
 
-
-
-
-            (adView.bodyView as? TextView)?.apply {
-                text = nativeAd.body ?: ""
-                visibility = if (nativeAd.body.isNullOrEmpty()) View.GONE else View.GONE
-            }
-            (adView.callToActionView as? Button)?.apply {
-                text = nativeAd.callToAction ?: ""
-                visibility = if (nativeAd.callToAction.isNullOrEmpty()) View.INVISIBLE else View.VISIBLE
-            }
-            val iconView = adView.iconView as? ImageView
-            val iconDrawable = nativeAd.icon?.drawable
-
-            if (iconDrawable != null) {
-                iconView?.visibility = View.VISIBLE
-                iconView?.setImageDrawable(iconDrawable)
+            if (nativeAd.body == null) {
+                adView.bodyView?.visibility = View.INVISIBLE
             } else {
-                iconView?.visibility = View.GONE
+                adView.bodyView?.visibility = View.VISIBLE
+                (adView.bodyView as TextView).text = nativeAd.body
+            }
+
+            if (nativeAd.callToAction == null) {
+                adView.callToActionView?.visibility = View.INVISIBLE
+            } else {
+                adView.callToActionView?.visibility = View.VISIBLE
+                (adView.callToActionView as TextView).text = nativeAd.callToAction
+            }
+
+            if (nativeAd.icon == null) {
+                adView.iconView?.visibility = View.GONE
+            } else {
+                (adView.iconView as ImageView).setImageDrawable(nativeAd.icon?.drawable)
+                adView.iconView?.visibility = View.VISIBLE
+            }
+
+            if (nativeAd.price == null) {
+                adView.priceView?.visibility = View.INVISIBLE
+            } else {
+                adView.priceView?.visibility = View.VISIBLE
+                (adView.priceView as TextView).text = nativeAd.price
+            }
+
+            if (nativeAd.store == null) {
+                adView.storeView?.visibility = View.INVISIBLE
+            } else {
+                adView.storeView?.visibility = View.VISIBLE
+                (adView.storeView as TextView).text = nativeAd.store
+            }
+
+            if (nativeAd.advertiser == null) {
+                adView.advertiserView?.visibility = View.INVISIBLE
+            } else {
+                adView.advertiserView?.visibility = View.VISIBLE
+                (adView.advertiserView as TextView).text = nativeAd.advertiser
             }
 
             adView.setNativeAd(nativeAd)
+
+            val vc = nativeAd.mediaContent?.videoController
+
+            if (vc?.hasVideoContent() == true) {
+                vc.videoLifecycleCallbacks = object : VideoController.VideoLifecycleCallbacks() {
+                    override fun onVideoEnd() {
+                        super.onVideoEnd()
+                        // Custom logic after video ends
+                    }
+                }
+            }
         } catch (e: Exception) {
             Log.e("NativeAdManager", "populateNativeAd failed: ${e.message}")
         }

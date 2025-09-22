@@ -65,7 +65,9 @@ class LanguageActivity : BaseActivity(), LanguageAdapter.NotifyLanguage {
         val pref = getSharedPreferences("Languages", MODE_PRIVATE)
         languageCode = pref.getString("languageCode", "")
 
-        binding.apply.visibility = View.GONE
+        if (languageCode=="") {
+            binding.apply.visibility = View.GONE
+        }
 
         val mLayoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         Log.d(

@@ -16,19 +16,16 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
-import com.android.billingclient.api.BillingClient.ProductType
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.ProductDetails
 import com.example.background_remove.BaseActivity
 import com.example.background_remove.MainActivity
-
 import com.example.background_remove.adsManager.Ads
-import com.example.background_remove.utils.PrefsManagerRemoteConfig
-import com.example.background_remove.utils.setupStatusBar
 import com.example.background_remove.billingsubs.BillingsHelperSubsCription
+import com.example.background_remove.utils.PrefsManagerRemoteConfig
 import com.example.background_remove.utils.setSafeClickListener
 import com.example.background_remove.utils.setSafeClickListenertools
-
+import com.example.background_remove.utils.setupStatusBar
 import com.google.common.collect.ImmutableList
 import com.photo.editor.background.eraser.bgeraser.R
 import com.photo.editor.background.eraser.bgeraser.databinding.ActivityPurchaseBinding
@@ -70,9 +67,9 @@ class PremiumActivity : BaseActivity() {
                 }
 
                 2 -> {
-                    billingsHelper?.selectedProductId = Ads.lifetimekey
+                   /* billingsHelper?.selectedProductId = Ads.lifetimekey
                     billingsHelper?.selectedProductType = ProductType.INAPP
-                    setSkuValues()
+                    setSkuValues()*/
                 }
             }
 
@@ -121,7 +118,7 @@ class PremiumActivity : BaseActivity() {
 
         override fun updateUI() {
             if (PrefsManagerRemoteConfig.with(this@PremiumActivity)
-                    .getBoolean(Ads.lifetimekey, false)
+                    .getBoolean(Ads.yearlykey, false)
             ) {
 
                 val intent = Intent(this@PremiumActivity, MainActivity::class.java)
@@ -169,27 +166,29 @@ class PremiumActivity : BaseActivity() {
 
     private fun setSkuValues() {
         try {
-            if (billingsHelper?.selectedProductId == Ads.lifetimekey) {
-                binding.lifetimeprice.text = PrefsManagerRemoteConfig.with(this)
-                    .getString(Ads.lifetimekey, "$39.9")
+            /*   if (billingsHelper?.selectedProductId == Ads.lifetimekey) {
+                   binding.lifetimeprice.text = PrefsManagerRemoteConfig.with(this)
+                       .getString(Ads.lifetimekey, "$39.9")
 
-                binding.lifetimeprice.text =
-                    PrefsManagerRemoteConfig.with(this)
-                        .getString(Ads.lifetimekey, "$39.9")
-
-
-            }
+                   binding.lifetimeprice.text =
+                       PrefsManagerRemoteConfig.with(this)
+                           .getString(Ads.lifetimekey, "$39.9")
 
 
+               }*/
+
+            binding.yearlyprice.text =
+                PrefsManagerRemoteConfig.with(this)
+                    .getString(Ads.yearlykey, "$19.99")
             binding.monthlyprice.text =
                 PrefsManagerRemoteConfig.with(this)
-                .getString(Ads.monthlykey, "$9.99")
+                    .getString(Ads.monthlykey, "$9.99")
 
 
 
             binding.weeklyprice.text =
                 PrefsManagerRemoteConfig.with(this)
-                .getString(Ads.weeklykey, "$2.99")
+                    .getString(Ads.weeklykey, "$2.99")
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -211,33 +210,45 @@ class PremiumActivity : BaseActivity() {
         binding.terms.paintFlags = binding.terms.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
         binding.tvPrivacy.paintFlags = binding.terms.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
 //.....................LIFE TIME ........................
-        binding.cardlifetime.setSafeClickListener(this) {
-            checktype = "yearly"
-            binding.cardlifetime.background = ContextCompat.getDrawable(this, R.drawable.premselected)
-            binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
-            binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
-            binding.text.visibility = View.VISIBLE
-            updateButton()
+        /*  binding.cardlifetime.setSafeClickListener(this) {
+              checktype = "yearly"
+              binding.cardlifetime.background = ContextCompat.getDrawable(this, R.drawable.premselected)
+              binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+              binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+              binding.text.visibility = View.VISIBLE
+              updateButton()
 
-        }
+          }*/
 
 
         binding.terms.setSafeClickListener(this) {
-              val otherAppIntent = Intent(
-                  Intent.ACTION_VIEW,
-                  Uri.parse("https://www.termsfeed.com/live/4116a220-04f2-448a-b8aa-8f66cde79b7a")
-              )
-              startActivity(otherAppIntent)
+            val otherAppIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://www.freeprivacypolicy.com/live/d22d26fb-208a-43ef-ae00-5726550dbf65")
+            )
+            startActivity(otherAppIntent)
         }
         binding.btnPurchase.setSafeClickListener(this) {
             when (checktype) {
+                /*   "yearly" -> {
+                       billingsHelper?.apply {
+                           checkPremium()
+                           launchBillingCus(billingsHelper?.lifeTimeSkuDetails)
+                       }
+                   }*/
                 "yearly" -> {
-                    billingsHelper?.apply {
-                        checkPremium()
-                        launchBillingCus(billingsHelper?.lifeTimeSkuDetails)
-                    }
-                }
+                    BillingsHelperSubsCription.selectedProductId = Ads.yearlykey
+                    BillingsHelperSubsCription.billingClient = null
+                    billingsHelpersybs = BillingsHelperSubsCription.getInstance(this)
+                    billingsHelpersybs?.setListener(premiumListener2)
+                    billingsHelpersybs?.initializeBillingClient(this)
+                    BillingsHelperSubsCription.billingClient =
+                        billingsHelpersybs?.connectToBillingService()
 
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        launchBillingFlow1(billingsHelpersybs?.subscriptionSkuDetails)
+                    }, 300)
+                }
                 "monthly" -> {
                     BillingsHelperSubsCription.selectedProductId = Ads.monthlykey
                     BillingsHelperSubsCription.billingClient = null
@@ -271,9 +282,18 @@ class PremiumActivity : BaseActivity() {
 
         binding.cardMonthly.setSafeClickListener(this) {
             binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.premselected)
-            binding.cardlifetime.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+            binding.cardYearly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
             binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
             checktype = "monthly"
+            binding.text.visibility = View.GONE
+            updateButton()
+
+        }
+        binding.cardYearly.setSafeClickListener(this) {
+            binding.cardYearly.background = ContextCompat.getDrawable(this, R.drawable.premselected)
+            binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+            binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+            checktype = "yearly"
             binding.text.visibility = View.GONE
             updateButton()
 
@@ -282,7 +302,7 @@ class PremiumActivity : BaseActivity() {
 // WEEKLY
         binding.cardWeekly.setSafeClickListener(this) {
             binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.premselected)
-            binding.cardlifetime.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+            binding.cardYearly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
             binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
             checktype = "weekly"
             binding.text.visibility = View.GONE
@@ -293,7 +313,7 @@ class PremiumActivity : BaseActivity() {
 
         binding.tvPrivacy.setSafeClickListener(this) {
             try {
-                val url = "https://www.freeprivacypolicy.com/live/f38e36e1-bded-45bb-b4b1-006e39f17174"
+                val url = "https://www.freeprivacypolicy.com/live/dc753e63-f7b1-474d-ac38-f16d8be29092"
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(intent)
             } catch (e: Exception) {
@@ -307,23 +327,22 @@ class PremiumActivity : BaseActivity() {
         if (!PrefsManagerRemoteConfig.with(this@PremiumActivity)
                 .getBoolean(Ads.KEY_IS_PURCHASED, false)
         ) {
-            if (skuDetails1?.name == "Life Time") {
-                if (skuDetails1 != null) {
-                    startPurchase(skuDetails1)
-                } else {
-                    billingsHelper?.startConnection(true)
-                }
+            Log.d("abcd", "launchBillingCus:name  ${skuDetails1?.name}")
+
+            if (skuDetails1 != null) {
+                Log.d("abcd", "startPurchase2: asdasd")
+                startPurchase(skuDetails1)
             } else {
-
                 billingsHelper?.startConnection(true)
-
             }
+
         } else {
             updateButton()
         }
     }
 
     private fun startPurchase(skuDetails: ProductDetails?) {
+        Log.d("abcd", "startPurchase1: ${skuDetails?.productType} ${skuDetails?.name}  ")
         if (skuDetails != null) {
             val flowParams: BillingFlowParams =
                 BillingFlowParams.newBuilder().setProductDetailsParamsList(
@@ -332,6 +351,7 @@ class PremiumActivity : BaseActivity() {
                             .setProductDetails(skuDetails).build()
                     )
                 ).build()
+            Log.d("abcd", "startPurchase: asdasd")
             BillingsHelper.billingClient?.launchBillingFlow(this, flowParams)
         } else {
             billingsHelper?.startConnection(true)
@@ -349,6 +369,7 @@ class PremiumActivity : BaseActivity() {
 
 
     private fun startPurchase1(skuDetails: ProductDetails?) {
+        Log.d("abcd", "startPurchase1: ${skuDetails?.productType} ${skuDetails?.name}  ")
         if (skuDetails != null) {
 
             val productDetailsParamsBuilder = BillingFlowParams.ProductDetailsParams.newBuilder()
@@ -379,12 +400,12 @@ class PremiumActivity : BaseActivity() {
         var subsCription = PrefsManagerRemoteConfig.with(this@PremiumActivity)
             .getBoolean(Ads.KEY_IS_PURCHASEDSubs, false)
 
-       /* disableButton(
+        disableButton(
             binding.btnPurchase,
             getString(R.string.already_purchased),
             PrefsManagerRemoteConfig.with(this@PremiumActivity)
                 .getString(Ads.purchasedsubs, "none"), lifetime, subsCription
-        )*/
+        )
 
 
     }
@@ -421,9 +442,17 @@ class PremiumActivity : BaseActivity() {
                     button.isEnabled = false
 
                 }
+            } else if (string == "yearly" && checktype == "yearly") {
+                if (button is TextView) {
+                    button.text = message
+                    button.alpha = 0.4f
+                    button.isClickable = false
+                    button.isEnabled = false
+
+                }
             } else {
                 if (button is TextView) {
-                   // button.text = getString(R.string.continue1)
+                    // button.text = getString(R.string.continue1)
                     button.alpha = 1f
                     button.isClickable = true
                     button.isEnabled = true
