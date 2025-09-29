@@ -33,25 +33,31 @@
         </provider>
         <activity
             android:name="com.example.background_remove.EditorActivity"
-
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name="com.example.background_remove.SettingsActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name="com.canhub.cropper.CropImageActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/CropImageTheme" />
         <activity
             android:name="com.example.background_remove.LanguageActivity"
+            android:screenOrientation="portrait"
             android:exported="true"/>
         <activity
             android:name="com.example.background_remove.billing.PremiumActivity"
+            android:screenOrientation="portrait"
             android:exported="true"/>
         <activity
             android:name="com.example.background_remove.PreviewActivity"
+            android:screenOrientation="portrait"
             android:exported="true"/>
         <activity
             android:name="com.example.background_remove.OnboardingActivity"
+            android:screenOrientation="portrait"
             android:exported="true"/>
 
         <service
@@ -60,6 +66,7 @@
 
         <activity
             android:name="com.example.background_remove.SplashActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,6 +76,7 @@
         </activity>
         <activity
             android:name="com.example.background_remove.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"/>
 
         <meta-data
@@ -86,7 +94,7 @@
         <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4431120339880974~8667210815" />
+            android:value="ca-app-pub-1031204555702774~1003326251" />
     </application>
 
 </manifest>
