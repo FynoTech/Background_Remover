@@ -15,12 +15,12 @@
         <RelativeLayout
             android:id="@+id/photo_edit_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="80dp"
             android:background="@drawable/background">
             <ImageView
                 android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="15dp"
+                android:layout_height="20dp"
                 android:padding="@dimen/_5sdp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_centerVertical="true"
                 android:id="@+id/text"
-
+                android:paddingTop="@dimen/_3sdp"
                 android:fontFamily="@font/montserratsemibold"
                 android:textColor="@color/white"
                 android:textSize="18sp"
@@ -107,13 +107,15 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:id="@+id/menu"
-        android:layout_height="140dp">
+        android:background="@color/lightgrey"
+        android:layout_height="160dp">
         <LinearLayout
             android:id="@+id/colorlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:layout_marginHorizontal="@dimen/_5sdp"
+
+            android:paddingHorizontal="@dimen/_5sdp"
             android:orientation="horizontal">
 
             <TextView
@@ -183,6 +185,8 @@
             android:layout_height="wrap_content"
             android:fillViewport="true"
             android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:elevation="@dimen/_5sdp"
             android:scrollbars="none"
             android:background="@color/white">
 
@@ -190,6 +194,7 @@
                 android:id="@+id/toolbarLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:weightSum="5"
                 android:orientation="horizontal"
                 android:gravity="center"
                >
@@ -198,15 +203,17 @@
                 <LinearLayout
                     android:id="@+id/layoutAutoRemoval"
                     android:layout_width="wrap_content"
+                    android:layout_weight="0.9"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:paddingVertical="@dimen/_5sdp"
                     android:gravity="center"
-                    android:paddingHorizontal="12dp">
+                    >
 
                     <ImageView
                         android:id="@+id/autoRemoval"
                         android:layout_width="24dp"
+                        android:layout_marginVertical="@dimen/_5sdp"
                         android:layout_height="24dp"
                         android:src="@drawable/autor_icon_unselect"
                         />
@@ -227,14 +234,16 @@
                     android:id="@+id/layoutManual"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingVertical="@dimen/_5sdp"
                     android:gravity="center"
-                    android:paddingHorizontal="12dp">
+                   >
 
                     <ImageView
                         android:id="@+id/manual"
                         android:layout_width="24dp"
+                        android:layout_marginVertical="@dimen/_5sdp"
                         android:layout_height="24dp"
                         android:src="@drawable/erase_icon"
                         />
@@ -256,14 +265,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    android:visibility="visible"
+                    android:layout_weight="1"
                     android:paddingVertical="@dimen/_5sdp"
                     android:gravity="center"
-                    android:paddingHorizontal="12dp">
+                   >
 
                     <ImageView
                         android:id="@+id/crop"
                         android:layout_width="24dp"
+                        android:layout_marginVertical="@dimen/_5sdp"
                         android:layout_height="24dp"
                         android:src="@drawable/crop_icon"
                        />
@@ -285,14 +296,16 @@
                     android:id="@+id/layoutRepair"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:paddingVertical="@dimen/_5sdp"
-                    android:paddingHorizontal="12dp">
+                    >
 
                     <ImageView
                         android:id="@+id/repair"
                         android:layout_width="24dp"
+                        android:layout_marginVertical="@dimen/_5sdp"
                         android:layout_height="24dp"
                         android:src="@drawable/repair_icon"
                        />
@@ -314,13 +327,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_weight="1"
                     android:paddingVertical="@dimen/_5sdp"
                     android:gravity="center"
-                    android:paddingHorizontal="12dp">
+                    >
 
                     <ImageView
                         android:id="@+id/zoom"
                         android:layout_width="24dp"
+                        android:layout_marginVertical="@dimen/_5sdp"
                         android:layout_height="24dp"
                         android:src="@drawable/zoom_icon"
                         />

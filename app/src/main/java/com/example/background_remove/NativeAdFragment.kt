@@ -108,13 +108,24 @@ class NativeAdFragment : Fragment() {
         }
     }
     private fun moveToNextPage() {
-        val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
-        viewPager?.let {
-            if (it.currentItem < (it.adapter?.itemCount ?: 0) - 1) {
-                it.currentItem += 1
+        val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager) ?: return
+
+        viewPager.post {
+            if (!isAdded || viewPager.adapter == null) return@post
+
+            val nextItem = viewPager.currentItem + 1
+            val itemCount = viewPager.adapter?.itemCount ?: 0
+
+            if (nextItem in 0 until itemCount) {
+                try {
+                    viewPager.setCurrentItem(nextItem, true)
+                } catch (e: IllegalStateException) {
+                    Log.e("NativeAdFragment", "ViewPager scroll failed: ${e.message}")
+                }
             }
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

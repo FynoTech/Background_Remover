@@ -64,6 +64,7 @@ class SplashActivity : BaseActivity() {
                                 binding.cvAdContainernative.visibility = View.VISIBLE
                                 loadSplashNativeAd()
                             }
+
                             if (RemoteConfigManager.isSplashInterstitialEnabled() && Ads.isNetworkAvailableWithoutPremium(
                                     this
                                 ) && !RemoteConfigManager.isSplashAppOpenEnabled()
@@ -79,6 +80,7 @@ class SplashActivity : BaseActivity() {
                     }
                 } else {
                     // No internet → continue normally
+
                     startProgressAnimation()
                 }
             }
@@ -213,6 +215,7 @@ class SplashActivity : BaseActivity() {
                 }
 
             } else if (failed) {
+                goNextScreen()
                 Log.d("Splash", "❌ Failed to load AppOpenAd")
             }
         }

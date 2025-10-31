@@ -313,6 +313,7 @@ object Ads {
         val caps = cm.getNetworkCapabilities(net) ?: return false
         val connected = caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
                 caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+
         val isPremium = PrefsManagerRemoteConfig.with(context).getBoolean(KEY_IS_PURCHASED, false)
         val isPremiumsubs = PrefsManagerRemoteConfig.with(context).getBoolean(KEY_IS_PURCHASEDSubs, false)
         return connected && showadsinapp && !isPremium && !isPremiumsubs

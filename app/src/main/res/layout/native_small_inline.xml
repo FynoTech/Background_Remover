@@ -9,7 +9,7 @@
         android:background="@drawable/ad_bg_strock1"
         android:minHeight="50dp"
         android:weightSum="2"
-        android:padding="@dimen/_5sdp"
+        android:padding="@dimen/_3sdp"
         android:orientation="horizontal">
 
 
@@ -18,12 +18,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.4"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/_5sdp">
-
+            >
+            <TextView
+                android:id="@+id/AD"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/adbg"
+                android:gravity="center"
+                android:fontFamily="@font/montserratregular"
+                android:text="Ad"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_9sdp"
+                android:textStyle="bold" />
             <ImageView
                 android:id="@+id/ad_app_icon"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"/>
@@ -50,19 +62,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_11sdp" />
 
-                    <TextView
-                        android:id="@+id/AD"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_15sdp"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:background="@drawable/adbg"
-                        android:gravity="center"
-                        android:fontFamily="@font/montserratregular"
-                        android:text="Ad"
-                        android:includeFontPadding="false"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_9sdp"
-                        android:textStyle="bold" />
+
 
 
                     <LinearLayout
@@ -143,11 +143,12 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_35sdp"
             android:layout_weight="0.6"
+            android:gravity="center"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
+            android:backgroundTint="#FFFF512F"
             android:includeFontPadding="false"
             android:layout_marginBottom="@dimen/_5sdp"
-            android:gravity="center"
             android:background="@drawable/buttonbg3"
             android:fontFamily="@font/montserratsemibold"
             android:text="Install"

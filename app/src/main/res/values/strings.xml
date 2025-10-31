@@ -35,6 +35,7 @@
     <string name="size">Size :</string>
     <string name="quit">Exit App?</string>
     <string name="are_you_sure_you_want_to_exit_n_the_app">Are you sure you want to exit\n the app</string>
+    <string name="are_you_sure_you_want_to_exit">Are you sure you want to exit</string>
     <string name="cancel">Cancel</string>
     <string name="quit1">Exit</string>
     <string name="cancelled">Cancelled</string>
@@ -43,7 +44,7 @@
     <string name="auto_remove_is_processing">Auto Remove is processing</string>
     <string name="error_occurred">Error Occurred</string>
     <string name="save">Save Image</string>
-    <string name="image_with_watermark">Image with watermark</string>
+    <string name="image_with_watermark">Image with Watermark</string>
     <string name="_1024px_high_resolution_image">1024px, High Resolution Image\nwithout watermark</string>
     <string name="save_now">Save Now</string>
     <string name="image_saved_to_downloads">Image saved to Downloads</string>
@@ -62,13 +63,13 @@
     <string name="update_required">Update Required</string>
     <string name="update_message">New version of Application is Available</string>
     <string name="update">Update</string>
-    <string name="premium">Premium</string>
+    <string name="premium">Unlock Premium</string>
     <string name="rate_app">Rate App</string>
     <string name="feedback"><![CDATA[Terms & Condition]]></string>
     <string name="howto">How to Use?</string>
     <string name="create_like_a_pro">Create Like a Pro</string>
-    <string name="ad_free_experience">Ad-Free</string>
-    <string name="faster_conversions">Fast Convert</string>
+    <string name="ad_free_experience">Unlock All Features</string>
+    <string name="faster_conversions">Unlimited Background Removal</string>
     <string name="seamless_and_smooth">Smooth Flow</string>
     <string name="purchase_now">Purchase Now</string>
     <string name="recurrent_billing_cancel_at_anytime">Recurring Billing, Cancel at Anytime</string>
@@ -96,4 +97,5 @@
     <string name="per_year">Per Year</string>
     <string name="already_purchased">Already Purchased</string>
     <string name="permissions_are_required_to_continue">Permissions are required to continue</string>
+    <string name="cropping_image">Cropping Image...</string>
 </resources>

@@ -61,14 +61,14 @@
             android:id="@+id/tt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
+            android:orientation="vertical"
+            android:weightSum="1"
             app:layout_constraintTop_toBottomOf="@id/desc">
 
             <LinearLayout
                 android:id="@+id/layout1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="start"
@@ -81,6 +81,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:layout_marginVertical="@dimen/_3sdp"
                     android:layout_marginBottom="10dp">
 
                     <ImageView
@@ -105,6 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_marginVertical="@dimen/_3sdp"
                     android:gravity="center_vertical"
                     android:layout_marginBottom="10dp">
 
@@ -124,34 +126,35 @@
                         android:textColor="@color/black"
                         app:fontFamily="@font/montserratregular"/>
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/layout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/_3sdp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/_15sdp">
+
+                    <ImageView
+                        android:id="@+id/image3"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/premiumicon"/>
+
+                    <TextView
+                        android:id="@+id/flyertext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/seamless_and_smooth"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        app:fontFamily="@font/montserratregular"/>
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Feature Item 3 -->
-            <LinearLayout
-                android:id="@+id/layout2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginEnd="@dimen/_15sdp">
 
-                <ImageView
-                    android:id="@+id/image3"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/premiumicon"/>
-
-                <TextView
-                    android:id="@+id/flyertext"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/seamless_and_smooth"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
-                    app:fontFamily="@font/montserratregular"/>
-            </LinearLayout>
         </LinearLayout>
 
         <!-- Pick Membership Description -->
@@ -336,16 +339,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Purchase Button -->
-        <Button
+        <TextView
             android:id="@+id/btnPurchase"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/purchase_now"
             android:textAllCaps="false"
-            android:fontFamily="@font/montserratmedium"
-            android:backgroundTint="@color/red"
+            android:fontFamily="@font/montserratsemibold"
+         android:background="@drawable/buttonbg3"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:gravity="center"
+            android:textSize="17sp"
             android:layout_marginTop="20dp"
             android:layout_marginHorizontal="@dimen/_20sdp"
             app:cornerRadius="25dp"

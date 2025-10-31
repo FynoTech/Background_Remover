@@ -40,9 +40,10 @@
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name="com.canhub.cropper.CropImageActivity"
+            android:name="com.example.background_remove.CropperActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CropImageTheme" />
+            android:exported="true"
+             />
         <activity
             android:name="com.example.background_remove.LanguageActivity"
             android:screenOrientation="portrait"
@@ -94,7 +95,7 @@
         <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4431120339880974~8667210815" />
+            android:value="ca-app-pub-1031204555702774~1003326251" />
     </application>
 
 </manifest>

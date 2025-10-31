@@ -67,10 +67,13 @@ object RemoteConfigManager {
     fun getSlidedrawerBannerAdId(): String = getAdId("Slidedrawer_Banner", TEST_BANNER)
 
     fun getResultNativeAdId(): String = getAdId("Result_Native", TEST_NATIVE)
+    fun getCropperNativeAdId(): String = getAdId("Cropper_Native", TEST_NATIVE)
     fun getEditorNativeAdId(): String = getAdId("Editor_Native", TEST_NATIVE)
     fun getResultBannerAdId(): String = getAdId("Result_Banner", TEST_BANNER)
+    fun getCropperBannerAdId(): String = getAdId("Cropper_Banner", TEST_BANNER)
     fun getEditorBannerAdId(): String = getAdId("Editor_Banner", TEST_BANNER)
     fun resultnativelayout()= getNumber("result_native_layout")
+    fun croppernativelayout()= getNumber("cropper_native_layout")
 
     fun getCounterInterstitialAdId(): String = getAdId("Counter_Interstitial", TEST_INTERSTITIAL)
     fun getRewardedAutoAdId(): String = getAdId("Rewarded_Auto", TEST_REWARDED)
@@ -104,6 +107,7 @@ object RemoteConfigManager {
 
     fun isSidedrawerBannerEnabled() = getBoolean("sidedrawer_banner_enable")
     fun isResultBannerEnabled() = getBoolean("result_banner_enable")
+    fun iscropperBannerEnabled() = getBoolean("cropper_banner_enable")
 
     fun isEditorBannerEnabled() = getBoolean("editor_banner_enable")
 
@@ -117,6 +121,7 @@ object RemoteConfigManager {
 
     fun isSideDrawerNativeEnabled() = getBoolean("sidedrawer_native_enable")
     fun isResultNativeEnabled() = getBoolean("result_native_enable")
+    fun iscropperNativeEnabled() = getBoolean("cropper_native_enable")
 
 
     fun homenativelayout()= getNumber("home_native_layout")

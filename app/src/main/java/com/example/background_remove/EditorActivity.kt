@@ -1,6 +1,7 @@
 package com.example.background_remove
 
 import ColorAdapter
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -14,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,18 +55,17 @@ class EditorActivity : BaseActivity() {
     private lateinit var binding: ActivityEditorBinding
     private var imageUri: Uri? = null
 
-    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
-        if (result.isSuccessful) {
-            // Use the cropped image URI.
-            val croppedImageUri = result.uriContent
-            setDrawViewBitmap(croppedImageUri!!)
 
-        } else {
-            // An error occurred.
-            val exception = result.error
-            // Handle the error.
+    private val cropLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val croppedUri = result.data?.getParcelableExtra<Uri>("cropped_uri")
+
+            if (croppedUri != null) {
+                setDrawViewBitmap(croppedUri)
+            }
         }
-
     }
     private var selectedLayout: LinearLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +94,7 @@ class EditorActivity : BaseActivity() {
             showQuitDialog(
                 context = this,
                 title = getString(R.string.quit),
+                des = getString(R.string.are_you_sure_you_want_to_exit),
                 onConfirm = {
                     finish() // close the activity
                 },
@@ -182,7 +184,10 @@ class EditorActivity : BaseActivity() {
 
         // Crop click
         binding.layoutCrop.setSafeClickListener(this) {
-            imageUri?.let { uri -> startCrop(uri) }
+            val intent = Intent(this, CropperActivity::class.java).apply {
+                putExtra("image_uri", Uri.parse(intent.getStringExtra("IMAGE_URI")))
+            }
+            cropLauncher.launch(intent)
             binding.manualClearSettingsLayout.visibility = android.view.View.GONE
             binding.colorlayout.visibility = android.view.View.GONE
             selectItem(binding.layoutCrop)
@@ -332,15 +337,7 @@ class EditorActivity : BaseActivity() {
     }
 
 
-    private fun startCrop(uri: Uri) {
-        cropImage.launch(
-            CropImageContractOptions(uri,
-                cropImageOptions = CropImageOptions(
-                    guidelines = CropImageView.Guidelines.ON
-                )
-            )
-        )
-    }
+
     var autocheck=false
     var remvoedbitmap:Bitmap?=null
     private fun autoSelfie() {
@@ -371,6 +368,7 @@ class EditorActivity : BaseActivity() {
         showQuitDialog(
             context = this,
             title = getString(R.string.quit),
+            des = getString(R.string.are_you_sure_you_want_to_exit),
             onConfirm = {
                 finish() // close the activity
             },

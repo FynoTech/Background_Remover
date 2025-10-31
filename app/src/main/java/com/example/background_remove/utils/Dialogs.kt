@@ -40,6 +40,7 @@ object Dialogs {
     fun showQuitDialog(
         context: Context,
         title:String,
+        des:String,
         onConfirm: () -> Unit,
         onCancel: (() -> Unit)? = null
     ) {
@@ -52,7 +53,9 @@ object Dialogs {
 
         val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
         val texttitle = dialog.findViewById<TextView>(R.id.tvTitle)
+        val texttitle1 = dialog.findViewById<TextView>(R.id.etFileName)
         texttitle.text = title
+        texttitle1.text = des
         val btnOk = dialog.findViewById<Button>(R.id.btnOk)
 
         // Clicks
