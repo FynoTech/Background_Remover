@@ -11,6 +11,9 @@ import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.chartboost.sdk.Chartboost
+import com.chartboost.sdk.privacy.model.CCPA
+import com.chartboost.sdk.privacy.model.GDPR
 import com.example.background_remove.adsManager.Ads
 import com.example.background_remove.adsManager.Ads.isNetworkAvailableWithoutPremium
 import com.example.background_remove.adsManager.Ads.isinterstitialvisible
@@ -23,6 +26,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.firebase.FirebaseApp
+import com.vungle.ads.VunglePrivacySettings
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +58,11 @@ class MyApp : Application(), Application.ActivityLifecycleCallbacks,
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         launch(Dispatchers.IO) {
-
+            val dataUseConsent = GDPR(GDPR.GDPR_CONSENT.NON_BEHAVIORAL)
+            Chartboost.addDataUseConsent(this@MyApp , dataUseConsent)
+            val dataUseConsent1 = CCPA(CCPA.CCPA_CONSENT.OPT_IN_SALE)
+            Chartboost.addDataUseConsent(this@MyApp, dataUseConsent1)
+            VunglePrivacySettings.setCCPAStatus(true)
             try {
                 MobileAds.initialize(this@MyApp)
             } catch (e: Exception) {

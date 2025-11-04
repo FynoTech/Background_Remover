@@ -2,6 +2,7 @@ package com.example.background_remove.utils
 
 import android.app.Activity
 import android.content.Context
+import com.applovin.sdk.AppLovinPrivacySettings
 import com.google.android.ump.ConsentDebugSettings
 import com.google.android.ump.ConsentForm.OnConsentFormDismissedListener
 import com.google.android.ump.ConsentInformation
@@ -57,6 +58,7 @@ class GDPRConsentMessage private constructor(context: Context) {
                     when (consentInformation.consentStatus) {
                         ConsentInformation.ConsentStatus.REQUIRED -> {
                             // If consent is required but not given, deny all.
+                            AppLovinPrivacySettings.setHasUserConsent(false,activity)
                             consentMap[FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE] = FirebaseAnalytics.ConsentStatus.DENIED
                             consentMap[FirebaseAnalytics.ConsentType.AD_STORAGE] = FirebaseAnalytics.ConsentStatus.DENIED
                             consentMap[FirebaseAnalytics.ConsentType.AD_USER_DATA] = FirebaseAnalytics.ConsentStatus.DENIED
@@ -64,6 +66,7 @@ class GDPRConsentMessage private constructor(context: Context) {
                         }
                         ConsentInformation.ConsentStatus.OBTAINED -> {
                             // If consent is given, grant all.
+                            AppLovinPrivacySettings.setHasUserConsent(true,activity)
                             consentMap[FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE] = FirebaseAnalytics.ConsentStatus.GRANTED
                             consentMap[FirebaseAnalytics.ConsentType.AD_STORAGE] = FirebaseAnalytics.ConsentStatus.GRANTED
                             consentMap[FirebaseAnalytics.ConsentType.AD_USER_DATA] = FirebaseAnalytics.ConsentStatus.GRANTED
@@ -71,6 +74,7 @@ class GDPRConsentMessage private constructor(context: Context) {
                         }
                         else -> {
                             // Default to denied if status is unknown or not required.
+                            AppLovinPrivacySettings.setHasUserConsent(false,activity)
                             consentMap[FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE] = FirebaseAnalytics.ConsentStatus.DENIED
                             consentMap[FirebaseAnalytics.ConsentType.AD_STORAGE] = FirebaseAnalytics.ConsentStatus.DENIED
                             consentMap[FirebaseAnalytics.ConsentType.AD_USER_DATA] = FirebaseAnalytics.ConsentStatus.DENIED
