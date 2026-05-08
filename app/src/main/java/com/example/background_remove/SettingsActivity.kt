@@ -15,6 +15,7 @@ import com.example.background_remove.adsManager.NativeAdManager
 import com.example.background_remove.billing.PremiumActivity
 
 import com.example.background_remove.utils.Dialogs
+import com.example.background_remove.utils.PrivacyPolicyUtils
 import com.example.background_remove.utils.RemoteConfigManager
 import com.example.background_remove.utils.setSafeClickListener
 import com.example.background_remove.utils.setSafeClickListenertools
@@ -79,14 +80,10 @@ class SettingsActivity : BaseActivity() {
                 Toast.makeText(this, getString(R.string.unable_to_share), Toast.LENGTH_SHORT).show()
             }
         }
-        binding.privacy.setSafeClickListener(this) {
-            try {
-                val url = "https://www.termsfeed.com/live/c153f142-bc22-498b-9ddc-95c43aab5f0c"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                startActivity(intent)
-            } catch (e: Exception) {
-
-            }
+        binding.privacy.visibility =
+            if (RemoteConfigManager.isPrivacyPolicyEnabled()) View.VISIBLE else View.GONE
+        binding.privacy.setSafeClickListenertools {
+            PrivacyPolicyUtils.openPrivacyPolicyIfPossible(this)
         }
         binding.terms.setSafeClickListener(this) {
             try {
@@ -103,7 +100,7 @@ class SettingsActivity : BaseActivity() {
             intent.putExtra("fromsettings",true)
             startActivity(intent)
         }
-        binding.premium.setSafeClickListener(this){
+        binding.premium.setSafeClickListenertools {
             val intent = Intent(this, PremiumActivity::class.java)
             startActivity(intent)
         }
@@ -143,8 +140,10 @@ class SettingsActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(Ads.isPremiumUser(this)){
-            binding.premium.visibility= View.GONE
+        binding.privacy.visibility =
+            if (RemoteConfigManager.isPrivacyPolicyEnabled()) View.VISIBLE else View.GONE
+        if (Ads.isPremiumUser(this)) {
+            binding.premium.visibility = View.GONE
         }
     }
     override fun onBackPressed() {

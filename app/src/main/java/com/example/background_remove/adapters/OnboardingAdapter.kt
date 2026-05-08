@@ -23,7 +23,10 @@ class OnboardingAdapter(
                     title = page.title,
                     description = page.description,
                     imageRes = page.imageRes,
-                    indiRes = page.indiREs
+                    indiRes = page.indiREs,
+                    screenNumber = page.screenNumber,
+                    showTop = page.showTop,
+                    showBottom = page.showBottom,
 
                 )
             }

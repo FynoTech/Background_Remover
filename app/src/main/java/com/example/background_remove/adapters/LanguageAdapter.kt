@@ -3,6 +3,7 @@ package com.example.background_remove.adapters
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -39,8 +40,10 @@ class LanguageAdapter(
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         if (currentLanguageCode == listData[position].code) {
             holder.card.background = context.getDrawable(R.drawable.langselect)
+            holder.countryName.setTextColor(Color.WHITE)
         } else {
             holder.card.background = context.getDrawable(R.drawable.langunselect)
+            holder.countryName.setTextColor(Color.BLACK)
         }
         holder.card.setSafeClickListener(holder.itemView.context) {
             notifyItemChanged(selectedindex)

@@ -25,8 +25,10 @@ import com.example.background_remove.adsManager.NativeAdManager
 import com.example.background_remove.billing.PremiumActivity
 
 import com.example.background_remove.utils.Dialogs
+import com.example.background_remove.utils.ProgressUtils
 import com.example.background_remove.utils.RemoteConfigManager
 import com.example.background_remove.utils.setSafeClickListener
+import com.example.background_remove.utils.setSafeClickListenertools
 import com.example.background_remove.utils.setupStatusBar
 import com.photo.editor.background.eraser.bgeraser.R
 import com.photo.editor.background.eraser.bgeraser.databinding.ActivityMainBinding
@@ -40,6 +42,9 @@ class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var imageUri: Uri? = null
+    private var attemptedHomeBanner = false
+    private var attemptedHomeNative = false
+    private var homeBackExitAdInProgress = false
 
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
@@ -83,6 +88,7 @@ class MainActivity : BaseActivity() {
             if (cameraGranted ) {
                 launchCamera()
             } else if (storageGranted) {
+                MyApp.skipNextResumeAppOpen = true
                 pickImageLauncher.launch(arrayOf("image/*"))
             } else {
                 Toast.makeText(this,
@@ -100,22 +106,13 @@ class MainActivity : BaseActivity() {
         setupStatusBar(window, Color.BLACK)
         setContentView(binding.root)
 
-        if(RemoteConfigManager.isHomeNativeEnabled()){
-            loadnativead()
-        }
-        else{
-            binding.cvAdContainerNative.visibility= View.GONE
-        }
-        if(RemoteConfigManager.isHomeBannerEnabled() ){
-            loadbannerad()
-        }else{
-            binding.cvAdContainerBanner.visibility= View.GONE
-        }
+        loadHomeAds()
+        preloadHomeExitInterstitialIfEnabled()
         binding.menu.setSafeClickListener(this) {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
-        binding.premium.setSafeClickListener(this) {
+        binding.premium.setSafeClickListenertools {
             val intent = Intent(this, PremiumActivity::class.java)
             startActivity(intent)
         }
@@ -182,7 +179,23 @@ class MainActivity : BaseActivity() {
         constraintSet.applyTo(parent)
     }
 
+    private fun loadHomeAds() {
+        attemptedHomeBanner = false
+        attemptedHomeNative = false
+        binding.cvAdContainerBanner.visibility = View.GONE
+        binding.cvAdContainerNative.visibility = View.GONE
+
+        // Requirement: Home primary preference is Banner when banner_onoff = true.
+        if (RemoteConfigManager.isHomeBannerEnabled()) {
+            loadbannerad()
+        } else if (RemoteConfigManager.isHomeNativeEnabled()) {
+            loadnativead()
+        }
+    }
+
     private fun loadbannerad(){
+        if (attemptedHomeBanner) return
+        attemptedHomeBanner = true
         binding.cvAdContainerBanner.visibility= View.VISIBLE
         AdBanner.loadBannerAdsplash(this,binding.cvAdContainerBanner,
             RemoteConfigManager.getHomeBannerAdId(),false,binding.loadingLayoutBanner,false)
@@ -190,11 +203,19 @@ class MainActivity : BaseActivity() {
                     loaded, failed ->
                 if(failed){
                     binding.cvAdContainerBanner.visibility= View.GONE
+                    if (!attemptedHomeNative &&
+                        RemoteConfigManager.isHomeNativeEnabled() &&
+                        RemoteConfigManager.isHomeBannerFailNativeEnabled()
+                    ) {
+                        loadnativead()
+                    }
                 }
 
             }
     }
     private fun loadnativead(){
+        if (attemptedHomeNative) return
+        attemptedHomeNative = true
         binding.cvAdContainerNative.visibility= View.VISIBLE
         if (RemoteConfigManager.homenativelayout()==1) {
             // Move native ad to bottom dynamically
@@ -209,6 +230,12 @@ class MainActivity : BaseActivity() {
             Log.d("Ads", "Native Ad loaded=$loaded failed=$failed fromCache=$fromCache")
             if(failed){
                 binding.cvAdContainerNative.visibility= View.GONE
+                if (!attemptedHomeBanner &&
+                    RemoteConfigManager.isHomeBannerEnabled() &&
+                    RemoteConfigManager.isHomeNativeFailBannerEnabled()
+                ) {
+                    loadbannerad()
+                }
             }
         }
 
@@ -224,6 +251,7 @@ class MainActivity : BaseActivity() {
                     "${packageName}.fileprovider",
                     it
                 )
+                MyApp.skipNextResumeAppOpen = true
                 takePictureLauncher.launch(cameraUri!!)
             }
         } catch (ex: Exception) {
@@ -254,6 +282,7 @@ class MainActivity : BaseActivity() {
             permissionLauncher.launch(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE))
         } else {
             // Android 10+ no need
+            MyApp.skipNextResumeAppOpen = true
             pickImageLauncher.launch(arrayOf("image/*"))
         }
     }
@@ -271,20 +300,51 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        Dialogs.showQuitDialog(
-            context = this,
-            title = getString(R.string.quit),
-            des = getString(R.string.are_you_sure_you_want_to_exit_n_the_app),
-            onConfirm = {
-                System.exit(0)
-                finishAffinity()
-            },
-            onCancel = {
-                Toast.makeText(this, getString(R.string.cancelled), Toast.LENGTH_SHORT).show()
-            }
+    private fun preloadHomeExitInterstitialIfEnabled() {
+        if (!RemoteConfigManager.isHomeExitInterstitialEnabled()) return
+        if (!Ads.isNetworkAvailableWithoutPremium(this)) return
+        Ads.preloadInterstitial(
+            ctx = this,
+            adUnitId = RemoteConfigManager.getHomeExitInterstitialAdId(),
+            placement = "home_exit",
         )
+    }
 
+    override fun onBackPressed() {
+        if (homeBackExitAdInProgress) return
+        if (RemoteConfigManager.isHomeExitInterstitialEnabled()) {
+            homeBackExitAdInProgress = true
+            ProgressUtils.show(this, getString(R.string.loading_ad_))
+            Ads.loadAndShowInterstitial(
+                activity = this,
+                adUnitId = RemoteConfigManager.getHomeExitInterstitialAdId(),
+                placement = "home_exit",
+                useAnyCachedFallback = true,
+                showDelayMs = 0L,
+            ) { loaded, failed, showed, dismissed ->
+                runOnUiThread {
+                    if (loaded || failed || showed || dismissed) {
+                        ProgressUtils.dismiss()
+                    }
+                    if (failed || dismissed) {
+                        homeBackExitAdInProgress = false
+                        startActivity(
+                            Intent(this@MainActivity, ExitActivity::class.java).putExtra(
+                                ExitActivity.EXTRA_FROM_HOME,
+                                true,
+                            ),
+                        )
+                    }
+                }
+            }
+        } else {
+            startActivity(
+                Intent(this, ExitActivity::class.java).putExtra(
+                    ExitActivity.EXTRA_FROM_HOME,
+                    true,
+                ),
+            )
+        }
     }
 
     override fun onResume() {

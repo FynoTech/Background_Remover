@@ -33,7 +33,6 @@ import com.example.background_remove.adsManager.NativeAdManager
 
 import com.example.background_remove.utils.Dialogs
 import com.example.background_remove.utils.Dialogs.colors
-import com.example.background_remove.utils.Dialogs.showQuitDialog
 import com.example.background_remove.utils.Preferences
 import com.example.background_remove.utils.ProgressUtils
 import com.example.background_remove.utils.RemoteConfigManager
@@ -83,25 +82,14 @@ class EditorActivity : BaseActivity() {
 
 
 
-        binding.done.setSafeClickListener(this) {
-            ProgressUtils.bitmap=binding.drawView.getBitmap()
-            val intent = Intent(this, PreviewActivity::class.java)
-            startActivity(intent)
-
-
+        binding.done.setSafeClickListenertools {
+            openPreviewFromEditor()
         }
-        binding.back.setSafeClickListener(this) {
-            showQuitDialog(
-                context = this,
-                title = getString(R.string.quit),
-                des = getString(R.string.are_you_sure_you_want_to_exit),
-                onConfirm = {
-                    finish() // close the activity
-                },
-                onCancel = {
-                    Toast.makeText(this, getString(R.string.cancelled), Toast.LENGTH_SHORT).show()
-                }
-            )
+        binding.text.setSafeClickListenertools {
+            openPreviewFromEditor()
+        }
+        binding.back.setSafeClickListenertools {
+            goToHome()
         }
 
         val adapter = ColorAdapter(colors) { clickedColor ->
@@ -117,7 +105,7 @@ class EditorActivity : BaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
         // Auto Removal click
-        binding.layoutAutoRemoval.setSafeClickListener(this,check = RemoteConfigManager.isRewardedAutoAdEnabled(), type = "rewarded") {
+        binding.layoutAutoRemoval.setSafeClickListenertools {
             if (!RemoteConfigManager.isRewardedAutoAdEnabled()) {
                 if (!autocheck) {
                     autoSelfie()
@@ -175,7 +163,7 @@ class EditorActivity : BaseActivity() {
         }
 
         // Manual click
-        binding.layoutManual.setSafeClickListener(this) {
+        binding.layoutManual.setSafeClickListenertools {
             binding.drawView.setAction(DrawView.DrawViewAction.MANUAL_CLEAR)
             binding.manualClearSettingsLayout.visibility = android.view.View.VISIBLE
             binding.colorlayout.visibility = android.view.View.GONE
@@ -183,7 +171,7 @@ class EditorActivity : BaseActivity() {
         }
 
         // Crop click
-        binding.layoutCrop.setSafeClickListener(this) {
+        binding.layoutCrop.setSafeClickListenertools {
             val intent = Intent(this, CropperActivity::class.java).apply {
                 putExtra("image_uri", Uri.parse(intent.getStringExtra("IMAGE_URI")))
             }
@@ -194,7 +182,7 @@ class EditorActivity : BaseActivity() {
         }
 
         // Repair click
-        binding.layoutRepair.setSafeClickListener(this) {
+        binding.layoutRepair.setSafeClickListenertools {
             binding.drawView.setAction(DrawView.DrawViewAction.MANUAL_REPAIR)
             binding.manualClearSettingsLayout.visibility = android.view.View.VISIBLE
             binding.colorlayout.visibility = android.view.View.GONE
@@ -208,7 +196,7 @@ class EditorActivity : BaseActivity() {
             loadnativead()
         }
         // Zoom click
-        binding.layoutZoom.setSafeClickListener(this) {
+        binding.layoutZoom.setSafeClickListenertools {
             binding.drawView.setAction(DrawView.DrawViewAction.ZOOM)
             binding.manualClearSettingsLayout.visibility = android.view.View.GONE
             binding.colorlayout.visibility = android.view.View.GONE
@@ -365,19 +353,18 @@ class EditorActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        showQuitDialog(
-            context = this,
-            title = getString(R.string.quit),
-            des = getString(R.string.are_you_sure_you_want_to_exit),
-            onConfirm = {
-                finish() // close the activity
-            },
-            onCancel = {
-                Toast.makeText(this, getString(R.string.cancelled), Toast.LENGTH_SHORT).show()
-            }
-        )
+        goToHome()
+    }
 
+    private fun goToHome() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
 
+    private fun openPreviewFromEditor() {
+        ProgressUtils.bitmap = binding.drawView.getBitmap()
+        val intent = Intent(this, PreviewActivity::class.java)
+        startActivity(intent)
     }
 
 

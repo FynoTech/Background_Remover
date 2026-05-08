@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.FrameLayout
+import com.example.background_remove.utils.RemoteConfigManager
 import com.facebook.shimmer.ShimmerFrameLayout
 
 import com.google.ads.mediation.admob.AdMobAdapter
@@ -45,6 +46,10 @@ object AdBanner {
         top: Boolean,
         shimmerFrameLayout: ShimmerFrameLayout
     ) {
+        if (!RemoteConfigManager.isAllAdsEnabled()) {
+            bannerAdContainer.visibility = View.GONE
+            return
+        }
         // view visibility gone if there is no internet
         if (!Ads.isNetworkAvailableWithoutPremium(ctx)) {
             bannerAdContainer.visibility = View.GONE
@@ -110,6 +115,10 @@ object AdBanner {
         top: Boolean,
         shimmerFrameLayout: ShimmerFrameLayout
     ) {
+        if (!RemoteConfigManager.isAllAdsEnabled()) {
+            bannerAdContainer.visibility = View.GONE
+            return
+        }
         // view visibility gone if there is no internet
         if (!isOnline(ctx)) {
             bannerAdContainer.visibility = View.GONE

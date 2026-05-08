@@ -215,9 +215,7 @@ class BillingsHelperSubsCription private constructor(activity: AppCompatActivity
 
                     subscriptionSkuDetails = productDetails
 
-                    val formattedPrice = subscriptionSkuDetails
-                        ?.subscriptionOfferDetails?.get(0)
-                        ?.pricingPhases?.pricingPhaseList?.get(0)?.formattedPrice
+                    val formattedPrice = extractDisplayPrice(productDetails)
 
                     formattedPrice?.let {
                         Log.d(TAG, "Product ID: ${productDetails.productId}, Price: $it")
@@ -244,6 +242,22 @@ class BillingsHelperSubsCription private constructor(activity: AppCompatActivity
                 }
             }
         }
+    }
+
+    /**
+     * Returns plan display price for cards.
+     * If offer has free-trial phase first, we prefer paid recurring phase (non-zero micros).
+     */
+    private fun extractDisplayPrice(productDetails: ProductDetails): String? {
+        val offers = productDetails.subscriptionOfferDetails ?: return null
+        for (offer in offers) {
+            val phases = offer.pricingPhases.pricingPhaseList
+            val paidPhase = phases.lastOrNull { it.priceAmountMicros > 0L }
+            if (paidPhase != null) return paidPhase.formattedPrice
+            val fallbackPhase = phases.lastOrNull()
+            if (fallbackPhase != null) return fallbackPhase.formattedPrice
+        }
+        return null
     }
 
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: List<Purchase>?) {

@@ -128,7 +128,7 @@ object AppOpenAdManager {
             RemoteConfigManager.getSplashAppOpenAdId()
         }
 
-        if (!RemoteConfigManager.isSplashAppOpenEnabled() || !Ads.showadsinapp) {
+        if (!RemoteConfigManager.isAllAdsEnabled() || !RemoteConfigManager.isSplashAppOpenEnabled() || !Ads.showadsinapp) {
             Log.i(TAG, "AppOpenAd disabled by RemoteConfig or ads disabled")
             if (withCallback) callback?.invoke(false, true)
             return

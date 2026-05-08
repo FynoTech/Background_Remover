@@ -32,6 +32,7 @@ object Ads {
     var showadsinapp: Boolean = true
     var shownow: Boolean = true
     var acitvitycountcheck: Int = 0
+    private var counterWindowStartMs: Long = 0L
     var isinterstitialvisible: Boolean = false
      const val KEY_IS_PURCHASED = "is_purchased"
      const val lifetimekey = "lifetime_subscription"
@@ -95,6 +96,10 @@ object Ads {
         placement: String,
         onResult: ((success: Boolean) -> Unit)? = null
     ) {
+        if (!RemoteConfigManager.isAllAdsEnabled()) {
+            onResult?.invoke(false)
+            return
+        }
         if (!isNetworkAvailableWithoutPremium(ctx)) {
             Log.d("AdsManager", "❌ Preload skipped: no network / premium user ($placement)")
             onResult?.invoke(false)
@@ -106,7 +111,7 @@ object Ads {
             return
         }
         if (!loadingPlacements.add(placement)) {
-            Log.d("AdsManager", "⏳ Already loading for $placement")
+            Log.d("AdsManager", "Already loading for $placement")
             onResult?.invoke(false)
             return
         }
@@ -152,11 +157,19 @@ object Ads {
         showDelayMs: Long = 0L,
         callback: ((loaded: Boolean, failed: Boolean, showed: Boolean, dismissed: Boolean) -> Unit)? = null
     ) {
-        if (!isNetworkAvailableWithoutPremium(activity)) {
+        if (!RemoteConfigManager.isAllAdsEnabled()) {
+            isinterstitialvisible = false
             callback?.invoke(false, true, false, false)
             return
         }
-        if(MyApp.isShowingrecently){
+        if (!canLoadInterstitial(activity, placement)) {
+            if (placement == "home_exit") {
+                Log.w("AdsManager", "home_exit: blocked (network or premium) showadsinapp=$showadsinapp")
+            }
+            callback?.invoke(false, true, false, false)
+            return
+        }
+        if (MyApp.isShowingrecently && placement != "home_exit") {
             callback?.invoke(false, true, false, false)
             MyApp.isShowingrecently=false
             return
@@ -173,12 +186,24 @@ object Ads {
         }
 
         if (!loadingPlacements.add(placement)) {
-            Log.d("AdsManager", "⏳ Already loading; will show when ready ($placement)")
+            Log.d("AdsManager", "Already loading; will show when ready ($placement)")
+            val cachedWhileLoading = interstitialCache[placement]
+                ?: if (useAnyCachedFallback) interstitialCache.values.firstOrNull { it != null } else null
+            if (cachedWhileLoading != null) {
+                callback?.invoke(true, false, false, false)
+                postToMain(showDelayMs) {
+                    internalShow(activity, cachedWhileLoading, placement, callback)
+                }
+            } else if (placement == "home_exit") {
+                Log.w("AdsManager", "home_exit: load in progress, no cache yet — fail so exit can finish")
+                callback?.invoke(false, true, false, false)
+            }
             return
         }
         timeedout = false
         val timeoutHandler = runWithTimeout(10_000) {
             if (interstitialCache[placement] == null) {
+                loadingPlacements.remove(placement)
                 ProgressUtils.dismiss()
                 isinterstitialvisible = false
                 timeedout = true
@@ -218,24 +243,47 @@ object Ads {
         activity: Activity,check:Boolean,type:String,
         callback: ((Boolean, Boolean, Boolean, Boolean) -> Unit)? = null
     ) {
-        if (Ads.shownow) acitvitycountcheck++
+        if (!RemoteConfigManager.isAllAdsEnabled()) {
+            ProgressUtils.dismiss()
+            callback?.invoke(false, false, false, true)
+            return
+        }
+        if (Ads.shownow) {
+            if (acitvitycountcheck == 0) {
+                counterWindowStartMs = System.currentTimeMillis()
+            }
+            acitvitycountcheck++
+        }
         if(check){
             ProgressUtils.show(activity,activity.getString(R.string.loading_ad_))
             when (type) {
 
                 "rewarded" -> {
+                    ProgressUtils.dismiss()
+                    callback?.invoke(false, false, false, true)
+                }
+                else -> {
+                    ProgressUtils.dismiss()
                     callback?.invoke(false, false, false, true)
                 }
             }
         }else{
-            if (acitvitycountcheck >= RemoteConfigManager.getCounterInterstitialCount() && RemoteConfigManager.isCounterInterstitialEnabled()) {
+            val countThreshold = RemoteConfigManager.getCounterInterstitialCount()
+            val durationMs = (RemoteConfigManager.getCounterInterstitialDurationSec().coerceAtLeast(0) * 1000L)
+            val elapsedMs = System.currentTimeMillis() - counterWindowStartMs
+            val countReady = acitvitycountcheck > countThreshold
+            val timeReady = elapsedMs >= durationMs
+
+            if (countReady && timeReady && RemoteConfigManager.isCounterInterstitialEnabled()) {
                 ProgressUtils.show(activity,activity.getString(R.string.loading_ad_))
                 acitvitycountcheck = 0 // reset after showing
+                counterWindowStartMs = 0L
 
                 loadAndShowInterstitial(activity, RemoteConfigManager.getCounterInterstitialAdId(), "counter", true, 0L, callback)
 
             } else {
                 // Not yet threshold → just continue app flow, trigger dismissed callback
+                ProgressUtils.dismiss()
                 callback?.invoke(false, false, false, true)
             }
         }
@@ -249,15 +297,15 @@ object Ads {
         placement: String,
         callback: ((Boolean, Boolean, Boolean, Boolean) -> Unit)?
     ) {
-        if (isPaused) {
+        if (isPaused && placement != "home_exit") {
             Log.d("AdsManager", "⏸️ Paused; deferring show ($placement)")
             pendingShowPlacements[placement] = callback
             return
         }
         if (activity.isFinishing || activity.isDestroyed) {
             Log.w("AdsManager", "❌ Activity destroyed, skipping interstitial ($placement)")
-            Ads.isinterstitialvisible=false
-          //  callback?.invoke(false, true, false, false)
+            Ads.isinterstitialvisible = false
+            callback?.invoke(false, true, false, false)
             return
         }
         ad.fullScreenContentCallback = object : FullScreenContentCallback() {
@@ -276,6 +324,7 @@ object Ads {
                     .forEach { interstitialCache[it.key] = null }
                 isinterstitialvisible =false
                 acitvitycountcheck = 0
+                counterWindowStartMs = 0L
                 ProgressUtils.dismiss()
 
                 Log.d("AdsManager", "👋 Interstitial dismissed ($placement)")
@@ -305,6 +354,18 @@ object Ads {
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({ onTimeout() }, timeoutMs)
         return handler
+    }
+
+    /**
+     * Exit interstitial must not depend on [showadsinapp] (otherwise it can look "disconnected"
+     * from RC). Still blocks when offline or premium.
+     */
+    private fun canLoadInterstitial(activity: Activity, placement: String): Boolean {
+        return if (placement == "home_exit") {
+            isNetworkAvailable(activity) && !isPremiumUser(activity)
+        } else {
+            isNetworkAvailableWithoutPremium(activity)
+        }
     }
 
     fun isNetworkAvailableWithoutPremium(context: Context): Boolean {
@@ -345,6 +406,10 @@ object Ads {
         showDelayMs: Long = 0L,
         callback: ((loaded: Boolean, failed: Boolean, showed: Boolean, dismissed: Boolean, rewarded: Boolean) -> Unit)? = null
     ) {
+        if (!RemoteConfigManager.isAllAdsEnabled()) {
+            callback?.invoke(false, true, false, false, false)
+            return
+        }
         if (!isNetworkAvailableWithoutPremium(activity)) {
             callback?.invoke(false, true, false, false, false)
             return

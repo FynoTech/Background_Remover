@@ -60,6 +60,10 @@
             android:name="com.example.background_remove.OnboardingActivity"
             android:screenOrientation="portrait"
             android:exported="true"/>
+        <activity
+            android:name="com.example.background_remove.ExitActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
 
         <service
             android:name="com.example.background_remove.utils.MyFirebaseMessagingService"

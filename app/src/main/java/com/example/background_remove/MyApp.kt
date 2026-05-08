@@ -8,6 +8,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -48,10 +49,14 @@ class MyApp : Application(), Application.ActivityLifecycleCallbacks,
     companion object {
         private const val LOG_TAG = "AppOpenAdManager"
         var isShowingrecently = false
+        @Volatile
+        var skipNextResumeAppOpen = false
 
     }
     override fun onCreate(){
         super<Application>.onCreate()
+        // Keep UI consistent across devices by not inheriting system dark mode.
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         registerActivityLifecycleCallbacks(this)
         Ads.shownow=false
@@ -80,8 +85,15 @@ class MyApp : Application(), Application.ActivityLifecycleCallbacks,
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
 
+        if (skipNextResumeAppOpen) {
+            skipNextResumeAppOpen = false
+            Log.d(LOG_TAG, "Skipping resume app-open for gallery/camera return")
+            return
+        }
 
-        if (Ads.shownow && ispause1 && !isinterstitialvisible && !isShowingAd && RemoteConfigManager.isAppOpenEnabled()) {
+        if (Ads.shownow && ispause1 && !isinterstitialvisible && !isShowingAd &&
+            RemoteConfigManager.isAppOpenEnabled() && RemoteConfigManager.isResumeAppOpenEnabled()
+        ) {
             Handler(Looper.getMainLooper()).postDelayed({
 
                 currentActivity?.let {
@@ -194,7 +206,11 @@ class MyApp : Application(), Application.ActivityLifecycleCallbacks,
 
         fun loadAd(context: Context) {
 
-            if (RemoteConfigManager.isAppOpenEnabled() && Ads.showadsinapp && Ads.isNetworkAvailableWithoutPremium(context)) {
+            if (RemoteConfigManager.isAppOpenEnabled() &&
+                RemoteConfigManager.isResumeAppOpenEnabled() &&
+                Ads.showadsinapp &&
+                Ads.isNetworkAvailableWithoutPremium(context)
+            ) {
                 Log.d("ghjhgjhgjhg", "loadAd: 1")
                 // Do not load ad if there is an unused ad or one is already loading.
                 if (isLoadingAd || isAdAvailable || appOpenAd != null) {
@@ -216,7 +232,10 @@ class MyApp : Application(), Application.ActivityLifecycleCallbacks,
                             isLoadingAd = false
                             loadTime = Date().time
                             countDownTimer?.cancel()
-                            if (RemoteConfigManager.isAppOpenEnabled() && showAd) {
+                            if (RemoteConfigManager.isAppOpenEnabled() &&
+                                RemoteConfigManager.isResumeAppOpenEnabled() &&
+                                showAd
+                            ) {
                                 showAdIfAvailable(context as Activity)
                             }
 
@@ -314,7 +333,12 @@ class MyApp : Application(), Application.ActivityLifecycleCallbacks,
             }
 
             Log.d("ghjhgjhgjhg", "showAdIfAvailable: " + isinterstitialvisible)
-            if (!isinterstitialvisible && RemoteConfigManager.isAppOpenEnabled() && Ads.showadsinapp && isNetworkAvailableWithoutPremium(activity)) {
+            if (!isinterstitialvisible &&
+                RemoteConfigManager.isAppOpenEnabled() &&
+                RemoteConfigManager.isResumeAppOpenEnabled() &&
+                Ads.showadsinapp &&
+                isNetworkAvailableWithoutPremium(activity)
+            ) {
                 isShowingAd = true
                 appOpenAd!!.show(activity)
             }

@@ -5,7 +5,10 @@ sealed class OnboardingPage {
         val title: String,
         val description: String,
         val imageRes: Int,
-        val indiREs: Int
+        val indiREs: Int,
+        val screenNumber: Int,
+        val showTop: Boolean = true,
+        val showBottom: Boolean = true,
 
     ) : OnboardingPage()
 

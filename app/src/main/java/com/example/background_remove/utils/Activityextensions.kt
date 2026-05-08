@@ -193,6 +193,7 @@ fun View.setSafeClickListener(activity: Context,check:Boolean=false,type:String=
 
                             Log.e("AdsManager", "⏰ Timeout interstitial$loaded ${showed} ($failed)")
                             if (dismissed || failed) {
+                                ProgressUtils.dismiss()
                                 onSafeClick(view)
                                 Log.e("AdsManager", "⏰ clicked")
                             }

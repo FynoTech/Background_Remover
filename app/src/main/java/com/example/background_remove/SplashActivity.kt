@@ -34,6 +34,8 @@ class SplashActivity : BaseActivity() {
     private var progressJob: Job? = null
     private var wasCancelled = false
 
+    private fun isActivityAlive(): Boolean = !(isFinishing || isDestroyed)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,6 +54,7 @@ class SplashActivity : BaseActivity() {
                     // 🔹 Fetch remote config first
                     RemoteConfigManager.init()
                     RemoteConfigManager.fetchAndActivate {
+                        if (!isActivityAlive()) return@fetchAndActivate
                         // 🔹 Check for force update
                         if (isForceUpdateRequired()) {
                             showForceUpdateDialog()
@@ -117,6 +120,7 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun showForceUpdateDialog() {
+        if (!isActivityAlive()) return
         progressJob?.cancel()
         MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.update_required))
@@ -193,10 +197,9 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun loadSplashOpenAd() {
-
-        AppOpenAdManager.loadAppOpenAd(this, withCallback = true) { loaded, failed ->
+        AppOpenAdManager.loadAppOpenAd(this, withCallback = true) { loaded, loadFailed ->
             if (loaded) {
-                AppOpenAdManager.showAppOpenAdForSplash(this) { showed, dismissed, failed ->
+                AppOpenAdManager.showAppOpenAdForSplash(this) { showed, dismissed, showFailed ->
                     when {
                         showed -> {
                             progressJob?.cancel()
@@ -207,17 +210,27 @@ class SplashActivity : BaseActivity() {
                             goNextScreen()
                         }
 
-                        failed -> {
-                            Log.d("Splash", "⚠️ AppOpenAd failed → continue app flow")
-                            goNextScreen()
+                        showFailed -> {
+                            Log.d("Splash", "⚠️ AppOpenAd show/load unavailable → try splash interstitial")
+                            trySplashInterstitialFallbackOrNavigate()
                         }
                     }
                 }
-
-            } else if (failed) {
-                goNextScreen()
-                Log.d("Splash", "❌ Failed to load AppOpenAd")
+            } else if (loadFailed) {
+                Log.d("Splash", "❌ Failed to load AppOpenAd → try splash interstitial")
+                trySplashInterstitialFallbackOrNavigate()
             }
+        }
+    }
+
+    /** After App Open fails: show splash interstitial if RC allows; otherwise continue (no block). */
+    private fun trySplashInterstitialFallbackOrNavigate() {
+        if (RemoteConfigManager.isSplashInterstitialEnabled() &&
+            Ads.isNetworkAvailableWithoutPremium(this)
+        ) {
+            loadSplashInterstitialAd()
+        } else {
+            goNextScreen()
         }
     }
 
@@ -258,7 +271,11 @@ class SplashActivity : BaseActivity() {
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             finish()
         } else {
-            startActivity(Intent(this@SplashActivity, LanguageActivity::class.java))
+            if (RemoteConfigManager.isLanguageScreenEnabled()) {
+                startActivity(Intent(this@SplashActivity, LanguageActivity::class.java))
+            } else {
+                startActivity(Intent(this@SplashActivity, OnboardingActivity::class.java))
+            }
             finish()
         }
     }

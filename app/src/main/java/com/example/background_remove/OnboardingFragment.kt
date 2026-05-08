@@ -25,12 +25,18 @@ class OnboardingFragment : Fragment() {
         private const val ARG_DESC = "arg_desc"
         private const val ARG_IMAGE = "arg_image"
         private const val ARG_INDI = "arg_indi"
+        private const val ARG_SCREEN = "arg_screen"
+        private const val ARG_SHOW_TOP = "arg_show_top"
+        private const val ARG_SHOW_BOTTOM = "arg_show_bottom"
 
         fun newInstance(
             title: String,
             description: String,
             imageRes: Int,
-            indiRes: Int
+            indiRes: Int,
+            screenNumber: Int,
+            showTop: Boolean,
+            showBottom: Boolean,
 
         ): OnboardingFragment {
             val fragment = OnboardingFragment()
@@ -39,6 +45,9 @@ class OnboardingFragment : Fragment() {
                 putString(ARG_DESC, description)
                 putInt(ARG_IMAGE, imageRes)
                 putInt(ARG_INDI, indiRes)
+                putInt(ARG_SCREEN, screenNumber)
+                putBoolean(ARG_SHOW_TOP, showTop)
+                putBoolean(ARG_SHOW_BOTTOM, showBottom)
             }
             fragment.arguments = args
             return fragment
@@ -61,6 +70,11 @@ class OnboardingFragment : Fragment() {
             tvTitle.text = arguments?.getString(ARG_TITLE)
             tvDesc.text = arguments?.getString(ARG_DESC)
             ivImage.setImageResource(arguments?.getInt(ARG_IMAGE) ?: 0)
+            val showTop = arguments?.getBoolean(ARG_SHOW_TOP, true) ?: true
+            val showBottom = arguments?.getBoolean(ARG_SHOW_BOTTOM, true) ?: true
+            ivImage.visibility = if (showTop) View.VISIBLE else View.GONE
+            tvTitle.visibility = if (showBottom) View.VISIBLE else View.GONE
+            tvDesc.visibility = if (showBottom) View.VISIBLE else View.GONE
            /* ivindicator.setImageResource(arguments?.getInt(ARG_INDI) ?: 0)
             btnNext.setSafeClickListenertools{
                 val viewPager = activity?.findViewById<ViewPager2>(

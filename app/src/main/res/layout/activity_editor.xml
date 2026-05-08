@@ -16,7 +16,7 @@
             android:id="@+id/photo_edit_toolbar"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:background="@drawable/background">
+            android:background="@drawable/gradient_orange_pink">
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="15dp"

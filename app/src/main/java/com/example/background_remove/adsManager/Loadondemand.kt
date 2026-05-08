@@ -1,6 +1,8 @@
 package com.example.background_remove.adsManager
 
 import android.app.Activity
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.background_remove.utils.RemoteConfigManager
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
@@ -42,6 +45,10 @@ object NativeAdManager {
         callback: ((loaded: Boolean, failed: Boolean, fromCache: Boolean) -> Unit)? = null
     ) {
         val parent = container as? ViewGroup ?: return
+        if (!RemoteConfigManager.isAllAdsEnabled()) {
+            callback?.invoke(false, true, false)
+            return
+        }
         if(!Ads.isNetworkAvailableWithoutPremium(activity)){
             callback?.invoke(false, true, false)
             return
@@ -170,6 +177,7 @@ object NativeAdManager {
             } else {
                 adView.callToActionView?.visibility = View.VISIBLE
                 (adView.callToActionView as TextView).text = nativeAd.callToAction
+                applyNativeCtaColor(adView.callToActionView)
             }
 
             if (nativeAd.icon == null) {
@@ -215,5 +223,18 @@ object NativeAdManager {
         } catch (e: Exception) {
             Log.e("NativeAdManager", "populateNativeAd failed: ${e.message}")
         }
+    }
+
+    private fun applyNativeCtaColor(callToActionView: View?) {
+        val target = callToActionView as? TextView ?: return
+        val colorValue = RemoteConfigManager.getNativeButtonColor()
+        if (colorValue.isBlank()) return
+        val parsed = try {
+            Color.parseColor(colorValue)
+        } catch (_: Exception) {
+            Log.w("NativeAdManager", "Invalid native_button_color: $colorValue")
+            return
+        }
+        target.backgroundTintList = ColorStateList.valueOf(parsed)
     }
 }

@@ -47,27 +47,23 @@ class LanguageActivity : BaseActivity(), LanguageAdapter.NotifyLanguage {
         setContentView(view)
         enableEdgeToEdge()
         setupStatusBar(window, Color.BLACK)
+        binding.toolbar.setBackgroundResource(R.drawable.gradient_orange_pink)
 
 
         val languages = listOf(
-            LanguageModel("English", "en", R.drawable.english),
             LanguageModel("Hindi", "hi", R.drawable.india),
             LanguageModel("Arabic", "ar", R.drawable.arabic),
             LanguageModel("Portuguese", "pt", R.drawable.brazil),
             LanguageModel("German", "de", R.drawable.german),
+            LanguageModel("English", "en", R.drawable.english),
             LanguageModel("Spanish", "es", R.drawable.spanish),
             LanguageModel("Russian", "ru", R.drawable.russian),
             LanguageModel("Chinese", "zh", R.drawable.chinese),
-
         )
 
 
         val pref = getSharedPreferences("Languages", MODE_PRIVATE)
         languageCode = pref.getString("languageCode", "")
-
-        if (languageCode=="") {
-            binding.apply.visibility = View.GONE
-        }
 
         val mLayoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         Log.d(
@@ -91,6 +87,12 @@ class LanguageActivity : BaseActivity(), LanguageAdapter.NotifyLanguage {
         binding.languagerecycler.adapter = adapter
         adapter?.SelectedLanguage(languageCode, pref.getInt("languageCodeposition", -1))
 
+        if (languageCode.isNullOrEmpty()) {
+            binding.apply.visibility = View.GONE
+        } else {
+            binding.apply.visibility = View.VISIBLE
+            updateDoneButtonState()
+        }
 
         if (RemoteConfigManager.isLanguageBannerEnabled()) {
             binding.cvAdContainerbanner.visibility = View.VISIBLE
@@ -108,94 +110,61 @@ class LanguageActivity : BaseActivity(), LanguageAdapter.NotifyLanguage {
 
 
         binding.apply.setSafeClickListenertools {
-
-
-            if (languageCode != "") {
-                Log.d("abcd", languageCode.toString())
-                val editor: SharedPreferences.Editor = pref.edit()
-                editor.putString("languageCode", languageCode)
-                editor.putInt("languageCodeposition", position)
-                editor.apply()
-                if (RemoteConfigManager.isLanguageInterstitialEnabled()) {
-                    ProgressUtils.show(this, getString(R.string.loading_ad_))
-                    Ads.loadAndShowInterstitial(
-                        activity = this,
-                        adUnitId = RemoteConfigManager.getLanguageInterstitialAdId(),
-                        placement = "language",
-                        useAnyCachedFallback = true,
-                        showDelayMs = 0
-                    ) { loaded, failed, showed, dismissed ->
-                        when {
-                            failed -> {
-                                ProgressUtils.dismiss()
-                                if (Preferences.getBoolValue(
-                                        this@LanguageActivity,
-                                        "firsttime"
-                                    )
-                                ) {
-                                    val mainIntent = Intent(this, MainActivity::class.java)
-                                    startActivity(mainIntent)
-                                    finish()
-                                } else {
-                                    val mainIntent = Intent(this, OnboardingActivity::class.java)
-                                    startActivity(mainIntent)
-                                    finish()
-                                }
-                                Preferences.setBoolValue(this@LanguageActivity, "firsttime", true)
-                            }
-
-                            dismissed -> {
-                                ProgressUtils.dismiss()
-                                if (Preferences.getBoolValue(
-                                        this@LanguageActivity,
-                                        "firsttime"
-                                    )
-                                ) {
-                                    val mainIntent = Intent(this, MainActivity::class.java)
-                                    startActivity(mainIntent)
-                                    finish()
-                                } else {
-                                    val mainIntent = Intent(this, OnboardingActivity::class.java)
-                                    startActivity(mainIntent)
-                                    finish()
-                                }
-                                Preferences.setBoolValue(this@LanguageActivity, "firsttime", true)
-                            }
-
-                            loaded -> { /* optional: ad ready */
-                            }
-
-                            showed -> {
-
-                            }
-                        }
-                    }
-                } else {
-                    if (Preferences.getBoolValue(
-                            this@LanguageActivity,
-                            "firsttime"
-                        )
-                    ) {
-                        val mainIntent = Intent(this, MainActivity::class.java)
-                        startActivity(mainIntent)
-                        finish()
-                    } else {
-                        val mainIntent = Intent(this, OnboardingActivity::class.java)
-                        startActivity(mainIntent)
-                        finish()
-                    }
-                    Preferences.setBoolValue(this@LanguageActivity, "firsttime", true)
-                }
-
-
-            } else {
+            if (!binding.apply.isClickable) return@setSafeClickListenertools
+            if (languageCode.isNullOrEmpty()) {
                 Toast.makeText(this, getString(R.string.Choose_Language), Toast.LENGTH_SHORT).show()
+                return@setSafeClickListenertools
             }
+            Log.d("abcd", languageCode.toString())
+            val editor: SharedPreferences.Editor = pref.edit()
+            editor.putString("languageCode", languageCode)
+            editor.putInt("languageCodeposition", position)
+            editor.apply()
 
-
+            if (RemoteConfigManager.isLanguageDoneInterstitialEnabled()) {
+                ProgressUtils.show(this, getString(R.string.loading_ad_))
+                Ads.loadAndShowInterstitial(
+                    activity = this,
+                    adUnitId = RemoteConfigManager.getLanguageInterstitialAdId(),
+                    placement = "language",
+                    useAnyCachedFallback = true,
+                    showDelayMs = 0
+                ) { _, failed, _, dismissed ->
+                    when {
+                        failed -> {
+                            ProgressUtils.dismiss()
+                            navigateAfterLanguageDone()
+                        }
+                        dismissed -> {
+                            ProgressUtils.dismiss()
+                            navigateAfterLanguageDone()
+                        }
+                        else -> { }
+                    }
+                }
+            } else {
+                navigateAfterLanguageDone()
+            }
         }
 
     }
+
+    private fun updateDoneButtonState() {
+        val hasSelection = !languageCode.isNullOrEmpty()
+        binding.apply.isClickable = hasSelection
+        binding.apply.alpha = if (hasSelection) 1f else 0.4f
+    }
+
+    private fun navigateAfterLanguageDone() {
+        if (Preferences.getBoolValue(this, "firsttime")) {
+            startActivity(Intent(this, MainActivity::class.java))
+            Preferences.setBoolValue(this, "firsttime", true)
+        } else {
+            startActivity(Intent(this, OnboardingActivity::class.java))
+        }
+        finish()
+    }
+
     private fun loadbannerad(){
         binding.cvAdContainerbanner.visibility=View.VISIBLE
         AdBanner.loadBannerAdsplash(this,binding.cvAdContainerbanner,RemoteConfigManager.getLanguageBannerAdId(),false,binding.loadingLayoutbanner,true)
@@ -254,10 +223,11 @@ class LanguageActivity : BaseActivity(), LanguageAdapter.NotifyLanguage {
 
     @SuppressLint("ResourceType")
     override fun notifyLanguage(flag: Int, name: String?, code: String?, position: Int) {
-        binding.apply.visibility = View.VISIBLE
         this.position = position
         languageCode = code
         adapter?.SelectedLanguage(code, position)
+        binding.apply.visibility = View.VISIBLE
+        updateDoneButtonState()
     }
 
 

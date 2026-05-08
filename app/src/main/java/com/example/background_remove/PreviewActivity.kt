@@ -17,6 +17,10 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContextCompat
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ImageSpan
 import com.example.background_remove.adsManager.AdBanner
 import com.example.background_remove.adsManager.Ads
 import com.example.background_remove.adsManager.NativeAdManager
@@ -66,6 +70,9 @@ class PreviewActivity : BaseActivity() {
         binding.imagewithwatermark.setSafeClickListener(this) {
             withWatermark = true
             binding.btnSave.text = getString(R.string.save_now)
+            binding.btnSave.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
+            binding.btnSave.compoundDrawablePadding = 0
+            binding.tvWatchAdBadge.visibility = View.GONE
             binding.imagewithwatermark.background =
                 resources.getDrawable(R.drawable.selected_border)
             binding.imagewithoutwatermark.background =
@@ -75,7 +82,8 @@ class PreviewActivity : BaseActivity() {
         }
         binding.imagewithoutwatermark.setSafeClickListener(this) {
             withWatermark = false
-            binding.btnSave.text = getString(R.string.watchad)
+            setWatchAdButtonTextWithIcon()
+            binding.tvWatchAdBadge.visibility = View.VISIBLE
             binding.imagewithoutwatermark.background =
                 resources.getDrawable(R.drawable.selected_border)
             binding.imagewithwatermark.background =
@@ -88,13 +96,7 @@ class PreviewActivity : BaseActivity() {
 
         // ✅ Close button
         binding.back.setSafeClickListener(this) {
-            if (lastSavedUri != null) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finishAffinity()
-            } else {
-                finish()
-            }
+            finish()
         }
 
         // ✅ Save button
@@ -266,14 +268,20 @@ class PreviewActivity : BaseActivity() {
         android.widget.Toast.makeText(this, msg, android.widget.Toast.LENGTH_SHORT).show()
     }
 
-    override fun onBackPressed() {
-        if (lastSavedUri != null) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finishAffinity()
-        } else {
-           finish()
+    private fun setWatchAdButtonTextWithIcon() {
+        val label = "  ${getString(R.string.watchad)}"
+        val span = SpannableString(label)
+        val icon = ContextCompat.getDrawable(this, R.drawable.ic_watch_video) ?: run {
+            binding.btnSave.text = getString(R.string.watchad)
+            return
         }
+        val size = (binding.btnSave.textSize * 0.95f).toInt().coerceAtLeast(16)
+        icon.setBounds(0, 0, size, size)
+        span.setSpan(ImageSpan(icon, ImageSpan.ALIGN_CENTER), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.btnSave.text = span
+    }
 
+    override fun onBackPressed() {
+        finish()
     }
 }

@@ -19,6 +19,7 @@
     <string name="animation">Animation</string>
     <string name="version">Version</string>
     <string name="unable_to_share">Unable to share</string>
+    <string name="privacy_policy_unavailable">Privacy policy is not available right now</string>
     <string name="settings">Settings</string>
     <string name="how_to_use">How to Use</string>
     <string name="rate">Rate App</string>
@@ -98,4 +99,22 @@
     <string name="already_purchased">Already Purchased</string>
     <string name="permissions_are_required_to_continue">Permissions are required to continue</string>
     <string name="cropping_image">Cropping Image...</string>
+    <string name="skip">Skip</string>
+    <string name="continue_text">Continue</string>
+    <string name="get_started">Get Started</string>
+    <string name="exit_app">Exit App</string>
+    <string name="are_you_sure_you_want_to_exit_the_app">Are you sure you want to exit the app?</string>
+    <string name="subscription_title_create">Create</string>
+    <string name="subscription_title_background">Background</string>
+    <string name="subscription_title_without_limits">Without Limits</string>
+    <string name="subscription_subtitle">Create unique background with\nvarious tools and styles</string>
+    <string name="subscription_popular">POPULAR</string>
+    <string name="subscription_best_deal">BEST DEAL</string>
+    <string name="subscription_trial_badge">3  DAYS\nFREE TRIAL</string>
+    <string name="subscription_plan_monthly">Monthly</string>
+    <string name="subscription_plan_weekly">Weekly</string>
+    <string name="subscription_plan_yearly">Yearly</string>
+    <string name="subscription_terms_of_use">Terms of Use</string>
+    <string name="subscription_footer_text">Start with a 3-day free trial! Subscriptions are managed via your Google Play Billing and will renew automatically after the trial unless canceled at least 24 hours before the trial ends. After purchase, you can manage or cancel your subscription anytime through your Account Settings</string>
+    <string name="subscription_try_free_3_days_trial">Try Free 3-days trial</string>
 </resources>

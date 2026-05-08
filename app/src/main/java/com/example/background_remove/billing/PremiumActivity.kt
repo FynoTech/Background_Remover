@@ -3,6 +3,7 @@ package com.example.background_remove.billing
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -23,6 +24,8 @@ import com.example.background_remove.MainActivity
 import com.example.background_remove.adsManager.Ads
 import com.example.background_remove.billingsubs.BillingsHelperSubsCription
 import com.example.background_remove.utils.PrefsManagerRemoteConfig
+import com.example.background_remove.utils.PrivacyPolicyUtils
+import com.example.background_remove.utils.RemoteConfigManager
 import com.example.background_remove.utils.setSafeClickListener
 import com.example.background_remove.utils.setSafeClickListenertools
 import com.example.background_remove.utils.setupStatusBar
@@ -34,7 +37,7 @@ import com.photo.editor.background.eraser.bgeraser.databinding.ActivityPurchaseB
 class PremiumActivity : BaseActivity() {
     private lateinit var binding: ActivityPurchaseBinding
     private var billingsHelper: BillingsHelper? = null
-    var checktype = "yearly"
+    var checktype = "weekly"
     private var billingsHelpersybs: BillingsHelperSubsCription? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +45,10 @@ class PremiumActivity : BaseActivity() {
         enableEdgeToEdge()
         setupStatusBar(window, Color.BLACK)
         setContentView(binding.root)
+        binding.text.visibility = View.VISIBLE
         setListeners()
         checkPremium()
+        updatePlanTitleStyles()
 
         if (PrefsManagerRemoteConfig.with(this@PremiumActivity)
                 .getBoolean(Ads.KEY_IS_PURCHASED, false)
@@ -52,6 +57,7 @@ class PremiumActivity : BaseActivity() {
         ) {
             updateButton()
         }
+        updateButton()
         for (i in 0 until 3) {
             when (i) {
                 0 -> {
@@ -177,18 +183,19 @@ class PremiumActivity : BaseActivity() {
 
                }*/
 
-            binding.yearlyprice.text =
-                PrefsManagerRemoteConfig.with(this)
-                    .getString(Ads.yearlykey, "$19.99")
-            binding.monthlyprice.text =
-                PrefsManagerRemoteConfig.with(this)
-                    .getString(Ads.monthlykey, "$9.99")
+            val yearly = PrefsManagerRemoteConfig.with(this)
+                .getString(Ads.yearlykey, "$19.99")
+                .ifBlank { "$19.99" }
+            val monthly = PrefsManagerRemoteConfig.with(this)
+                .getString(Ads.monthlykey, "$9.99")
+                .ifBlank { "$9.99" }
+            val weekly = PrefsManagerRemoteConfig.with(this)
+                .getString(Ads.weeklykey, "$2.99")
+                .ifBlank { "$2.99" }
 
-
-
-            binding.weeklyprice.text =
-                PrefsManagerRemoteConfig.with(this)
-                    .getString(Ads.weeklykey, "$2.99")
+            binding.yearlyprice.text = yearly
+            binding.monthlyprice.text = monthly
+            binding.weeklyprice.text = weekly
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -207,28 +214,30 @@ class PremiumActivity : BaseActivity() {
             }
         }
 
-        binding.terms.paintFlags = binding.terms.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
-        binding.tvPrivacy.paintFlags = binding.terms.paintFlags or Paint.UNDERLINE_TEXT_FLAG;
+        binding.terms.paintFlags = binding.terms.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        binding.tvPrivacy.paintFlags = binding.terms.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        binding.tvPrivacy.visibility =
+            if (RemoteConfigManager.isPrivacyPolicyEnabled()) View.VISIBLE else View.GONE
 //.....................LIFE TIME ........................
         /*  binding.cardlifetime.setSafeClickListener(this) {
               checktype = "yearly"
-              binding.cardlifetime.background = ContextCompat.getDrawable(this, R.drawable.premselected)
-              binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
-              binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+              binding.cardlifetime.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_selected)
+              binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_dark)
+              binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_dark)
               binding.text.visibility = View.VISIBLE
               updateButton()
 
           }*/
 
 
-        binding.terms.setSafeClickListener(this) {
+        binding.terms.setSafeClickListenertools {
             val otherAppIntent = Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse("https://www.freeprivacypolicy.com/live/d22d26fb-208a-43ef-ae00-5726550dbf65")
             )
             startActivity(otherAppIntent)
         }
-        binding.btnPurchase.setSafeClickListener(this) {
+        binding.btnPurchase.setSafeClickListenertools {
             when (checktype) {
                 /*   "yearly" -> {
                        billingsHelper?.apply {
@@ -280,49 +289,53 @@ class PremiumActivity : BaseActivity() {
 
         }
 
-        binding.cardMonthly.setSafeClickListener(this) {
-            binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.premselected)
-            binding.cardYearly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
-            binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+        binding.cardMonthly.setSafeClickListenertools {
+            binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_selected)
+            binding.cardYearly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_dark)
+            binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_dark)
             checktype = "monthly"
-            binding.text.visibility = View.GONE
+            binding.text.visibility = View.VISIBLE
+            updatePlanTitleStyles()
             updateButton()
 
         }
-        binding.cardYearly.setSafeClickListener(this) {
-            binding.cardYearly.background = ContextCompat.getDrawable(this, R.drawable.premselected)
-            binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
-            binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+        binding.cardYearly.setSafeClickListenertools {
+            binding.cardYearly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_selected)
+            binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_dark)
+            binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_dark)
             checktype = "yearly"
-            binding.text.visibility = View.GONE
+            binding.text.visibility = View.VISIBLE
+            updatePlanTitleStyles()
             updateButton()
 
         }
 
 // WEEKLY
-        binding.cardWeekly.setSafeClickListener(this) {
-            binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.premselected)
-            binding.cardYearly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
-            binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.unselectprem)
+        binding.cardWeekly.setSafeClickListenertools {
+            binding.cardWeekly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_selected)
+            binding.cardYearly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_dark)
+            binding.cardMonthly.background = ContextCompat.getDrawable(this, R.drawable.sub_plan_dark)
             checktype = "weekly"
-            binding.text.visibility = View.GONE
+            binding.text.visibility = View.VISIBLE
+            updatePlanTitleStyles()
             updateButton()
         }
 
 
 
-        binding.tvPrivacy.setSafeClickListener(this) {
-            try {
-                val url = "https://www.freeprivacypolicy.com/live/dc753e63-f7b1-474d-ac38-f16d8be29092"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                startActivity(intent)
-            } catch (e: Exception) {
-
-            }
+        binding.tvPrivacy.setSafeClickListenertools {
+            PrivacyPolicyUtils.openPrivacyPolicyIfPossible(this)
         }
     }
 
     var check = false
+
+    private fun updatePlanTitleStyles() {
+        binding.tvMonthlyTitle.setTypeface(null, if (checktype == "monthly") Typeface.BOLD else Typeface.NORMAL)
+        binding.tvWeeklyTitle.setTypeface(null, if (checktype == "weekly") Typeface.BOLD else Typeface.NORMAL)
+        binding.tvYearlyTitle.setTypeface(null, if (checktype == "yearly") Typeface.BOLD else Typeface.NORMAL)
+    }
+
     private fun launchBillingCus(skuDetails1: ProductDetails?) {
         if (!PrefsManagerRemoteConfig.with(this@PremiumActivity)
                 .getBoolean(Ads.KEY_IS_PURCHASED, false)
@@ -394,7 +407,9 @@ class PremiumActivity : BaseActivity() {
     }
 
     private fun updateButton() {
-
+        binding.btnPurchase.text =
+            if (checktype == "weekly") getString(R.string.subscription_try_free_3_days_trial)
+            else getString(R.string.continue_text)
         var lifetime = PrefsManagerRemoteConfig.with(this@PremiumActivity)
             .getBoolean(Ads.KEY_IS_PURCHASED, false)
         var subsCription = PrefsManagerRemoteConfig.with(this@PremiumActivity)
@@ -452,7 +467,9 @@ class PremiumActivity : BaseActivity() {
                 }
             } else {
                 if (button is TextView) {
-                    // button.text = getString(R.string.continue1)
+                    button.text =
+                        if (checktype == "weekly") getString(R.string.subscription_try_free_3_days_trial)
+                        else getString(R.string.continue_text)
                     button.alpha = 1f
                     button.isClickable = true
                     button.isEnabled = true

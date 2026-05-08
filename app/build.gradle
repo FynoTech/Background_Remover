@@ -13,8 +13,8 @@ android {
         applicationId "com.photo.editor.background.eraser.bgeraser"
         minSdk 26
         targetSdk 36
-        versionCode 10
-        versionName "1.9"
+        versionCode 17
+        versionName "1.16"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
