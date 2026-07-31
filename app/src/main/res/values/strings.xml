@@ -117,4 +117,18 @@
     <string name="subscription_terms_of_use">Terms of Use</string>
     <string name="subscription_footer_text">Start with a 3-day free trial! Subscriptions are managed via your Google Play Billing and will renew automatically after the trial unless canceled at least 24 hours before the trial ends. After purchase, you can manage or cancel your subscription anytime through your Account Settings</string>
     <string name="subscription_try_free_3_days_trial">Try Free 3-days trial</string>
+
+    <string name="camera_permission_title">Camera permission required</string>
+    <string name="camera_permission_message">Camera access is required to capture a photo. Please allow camera permission to continue.</string>
+
+    <string name="camera_permission_denied_title">Enable camera permission</string>
+    <string name="camera_permission_denied_message">Camera permission has been denied. Open app settings and enable the Camera permission to capture photos.</string>
+
+    <string name="camera_permission_required">Camera permission is required to continue.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="allow">Allow</string>
+    <string name="unable_to_open_settings">Unable to open app settings.</string>
+    <string name="color">Color</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
 </resources>
